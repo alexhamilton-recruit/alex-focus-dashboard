@@ -1,153 +1,2194 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <title>Run this app to see the results here.</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans">
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #1c2333;
-      font-family: "IBM Plex Sans", "sans";
-      color: #f5f9fc;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Focus — Alex Hamilton</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f7f3ec;--card:#fff;--card2:#f0ebe1;--ink:#0d0d0d;--muted:#888070;--border:#e0d8cc;--accent:#e85d26;--gold:#c49a00;--green:#1a7a4a;--blue:#1a5a8a;--purple:#5b3fa0;--r:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.topbar{background:var(--ink);color:#f7f3ec;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.topbar h1{font-family:"Syne",sans-serif;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.topbar h1 span{color:var(--accent)}
+.topbar p{font-size:10px;font-weight:300;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-top:2px}
+.streak{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);padding:6px 14px;border-radius:20px}
+.streak-n{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:var(--accent)}
+.streak-l{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#888}
+.nav-tabs{background:var(--ink);padding:0 28px;display:flex;gap:0;overflow-x:auto;border-bottom:none}
+.nav-tabs::-webkit-scrollbar{height:3px}
+.nav-tabs::-webkit-scrollbar-thumb{background:#333}
+.ntab{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;padding:11px 18px;cursor:pointer;border-bottom:3px solid transparent;color:#666;transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.ntab:hover{color:#aaa}
+.ntab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{display:none;padding:22px 28px;max-width:1440px;margin:0 auto}
+.page.active{display:block}
+.two-col{display:grid;grid-template-columns:1fr 380px;gap:18px}
+@media(max-width:1000px){.two-col{grid-template-columns:1fr}}
+@media(max-width:700px){.page{padding:14px}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow)}
+.card-hdr{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.card-title{font-family:"Syne",sans-serif;font-size:14px;font-weight:700}
+.slbl{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.bdg{font-size:10px;padding:2px 9px;border-radius:20px;font-weight:600;white-space:nowrap}
+.bdg-acc{background:var(--accent);color:#fff}
+.bdg-grn{background:#e8f5ee;color:var(--green)}
+.bdg-gld{background:#fff8e7;color:var(--gold)}
+.bdg-mut{background:var(--card2);color:var(--muted)}
+.bdg-blue{background:#e8f0fb;color:var(--blue)}
+.bdg-red{background:#fdecea;color:var(--accent)}
+.mot{background:var(--ink);color:#f7f3ec;border-radius:var(--r);padding:16px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.mot::before{content:"";position:absolute;right:-16px;top:-16px;width:80px;height:80px;border-radius:50%;background:var(--accent);opacity:.12}
+.mot-text{font-family:"Syne",sans-serif;font-size:17px;font-weight:700;line-height:1.3;position:relative;z-index:1}
+.mot-sub{font-size:12px;color:#aaa;margin-top:5px;position:relative;z-index:1}
+.prog-card{background:var(--card);border-radius:var(--r);padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+.prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.prog-n{font-family:"Syne",sans-serif;font-size:26px;font-weight:800}
+.prog-bar-wrap{background:var(--card2);border-radius:20px;height:9px;overflow:hidden}
+.prog-bar{height:100%;border-radius:20px;background:var(--accent);transition:width .5s cubic-bezier(.4,0,.2,1)}
+.prog-msg{font-size:11px;color:var(--muted);margin-top:6px}
+.week-card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.week-row{display:flex;gap:5px;padding:12px 16px}
+.day{flex:1;text-align:center;border-radius:6px;padding:7px 3px;font-size:10px;border:1px solid var(--border)}
+.day.today{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.day.done-day{background:var(--green);color:#fff;border-color:var(--green)}
+.day .dn{font-size:8px;text-transform:uppercase;letter-spacing:.06em;opacity:.7;display:block}
+.day .dnum{font-family:"Syne",sans-serif;font-size:14px;font-weight:700;display:block;line-height:1.3}
+.tasks{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.task{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;transition:opacity .3s}
+.task.done{opacity:.5}
+.task.done .task-text{text-decoration:line-through;color:var(--muted)}
+.task-main{display:flex;align-items:flex-start;gap:10px;padding:12px 14px}
+.task-num{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;color:var(--border);flex-shrink:0;line-height:1;min-width:26px}
+.task.done .task-num{color:var(--green)}
+.tick{flex-shrink:0;width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px}
+.tick:hover{border-color:var(--green)}
+.task.done .tick{background:var(--green);border-color:var(--green)}
+.tick-i{color:#fff;font-size:12px;display:none}
+.task.done .tick-i{display:block}
+.task-body{flex:1;min-width:0}
+.task-text{font-size:13px;font-weight:500;line-height:1.4;word-break:break-word}
+.task-meta{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;align-items:center}
+.ttag{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500}
+.tc{background:#fdecea;color:var(--accent);border:1px solid rgba(232,93,38,.2)}
+.tb{background:#e8f0fb;color:var(--blue);border:1px solid rgba(26,90,138,.2)}
+.tca{background:#e8f5ee;color:var(--green);border:1px solid rgba(26,122,74,.2)}
+.ta{background:#f5f0e0;color:var(--gold);border:1px solid rgba(196,154,0,.2)}
+.task-acts{display:flex;gap:5px;padding:0 14px 10px 60px;flex-wrap:wrap}
+.tact{font-size:10px;font-weight:500;padding:3px 10px;border-radius:4px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .12s;font-family:"DM Sans",sans-serif}
+.tact:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tact.em{border-color:var(--accent);color:var(--accent)}
+.tact.em:hover{background:var(--accent);color:#fff}
+.add-form{background:var(--card);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow);display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.add-inp{flex:1;min-width:160px;font-family:"DM Sans",sans-serif;font-size:13px;padding:8px 11px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--ink);outline:none}
+.add-inp:focus{border-color:var(--accent)}
+.add-sel{font-family:"DM Sans",sans-serif;font-size:11px;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--ink);outline:none;cursor:pointer}
+.add-btn{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:600;padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer}
+.add-btn:hover{opacity:.85}
+.api-body{padding:14px 18px}
+.api-body p{font-size:11.5px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+.api-row{display:flex;gap:7px}
+.api-inp{flex:1;font-family:"DM Sans",sans-serif;font-size:12px;padding:8px 11px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--ink);outline:none}
+.api-inp:focus{border-color:var(--accent)}
+.api-btn{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:600;padding:8px 14px;background:var(--ink);color:#fff;border:none;border-radius:6px;cursor:pointer;white-space:nowrap}
+.api-st{font-size:11px;margin-top:7px;padding:5px 9px;border-radius:4px;display:none}
+.api-ok{background:#e8f5ee;color:var(--green);display:block}
+.api-err{background:#fdecea;color:var(--accent);display:block}
+.search-btn{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;display:block;margin:12px 18px;width:calc(100% - 36px);transition:opacity .15s}
+.search-btn:hover{opacity:.85}
+.search-btn:disabled{opacity:.5;cursor:not-allowed}
+.search-btn.sday{background:var(--green)}
+.search-st{padding:10px 18px;font-size:11.5px;color:var(--muted);display:none}
+.search-st.show{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:11px;height:11px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin-right:5px;vertical-align:middle}
+.job-item{padding:11px 18px;border-bottom:1px solid var(--border);transition:background .12s}
+.job-item:last-child{border-bottom:none}
+.job-item:hover{background:var(--bg)}
+.job-co{font-size:13px;font-weight:600}
+.job-role{font-size:12px;color:var(--accent);margin-top:2px;font-weight:500}
+.job-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.job-trigger{font-size:11px;color:var(--green);margin-top:3px;font-weight:500}
+.job-acts{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.jact{font-size:10px;font-weight:500;padding:3px 9px;border-radius:4px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .12s;font-family:"DM Sans",sans-serif}
+.jact:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.jact.p{border-color:var(--accent);color:var(--accent)}
+.jact.p:hover{background:var(--accent);color:#fff}
+.last-run{padding:7px 18px;font-size:10px;color:var(--muted);text-align:right;border-top:1px solid var(--border)}
+.sug-item{display:flex;align-items:flex-start;gap:9px;padding:9px 16px;border-bottom:1px solid var(--border);transition:background .12s}
+.sug-item:last-child{border-bottom:none}
+.sug-item:hover{background:var(--bg)}
+.sug-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.sug-text{font-size:12px;line-height:1.4}
+.sug-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+.sug-add{font-size:10px;color:var(--accent);font-weight:600;margin-left:auto;flex-shrink:0;padding:3px 7px;border:1px solid rgba(232,93,38,.3);border-radius:4px;background:transparent;cursor:pointer;font-family:"DM Sans",sans-serif;white-space:nowrap}
+.sug-add:hover{background:var(--accent);color:#fff}
+.role-card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:10px;border-left:4px solid var(--border);transition:transform .15s}
+.role-card:hover{transform:translateY(-1px)}
+.role-card.active-role{border-left-color:var(--accent)}
+.role-card.briefed{border-left-color:var(--blue)}
+.role-card.shortlisted{border-left-color:var(--gold)}
+.role-card.closed{border-left-color:var(--green);opacity:.6}
+.cand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.cand-card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;transition:transform .15s}
+.cand-card:hover{transform:translateY(-2px)}
+.cand-name{font-family:"Syne",sans-serif;font-size:14px;font-weight:700}
+.cand-role{font-size:11.5px;color:var(--muted);margin-top:2px}
+.skill-pill{font-size:10px;padding:2px 8px;border-radius:3px;background:var(--card2);border:1px solid var(--border);color:var(--muted);transition:all .1s;display:inline-block;margin:2px}
+.skill-pill.match{background:rgba(232,93,38,.1);border-color:rgba(232,93,38,.3);color:var(--accent)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow);text-align:center}
+.stat-n{font-family:"Syne",sans-serif;font-size:32px;font-weight:800;line-height:1;margin-bottom:4px}
+.stat-l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.stat-btns{display:flex;gap:4px;justify-content:center;margin-top:8px}
+.stat-btn{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:600;padding:4px 12px;border-radius:4px;border:1px solid var(--border);background:transparent;cursor:pointer;transition:all .12s}
+.stat-btn.plus{border-color:var(--green);color:var(--green)}
+.stat-btn.plus:hover{background:var(--green);color:#fff}
+.stat-btn.minus{border-color:var(--muted);color:var(--muted)}
+.stat-btn.minus:hover{background:var(--muted);color:#fff}
+.wt-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
+.wt-row:last-child{border-bottom:none}
+.wt-label{font-size:13px;flex:1}
+.wt-bar-wrap{flex:2;background:var(--card2);border-radius:20px;height:8px;overflow:hidden}
+.wt-bar{height:100%;border-radius:20px;transition:width .4s;background:var(--accent)}
+.wt-bar.done{background:var(--green)}
+.wt-pct{font-size:11px;color:var(--muted);min-width:36px;text-align:right}
+.notes-area{width:100%;min-height:320px;font-family:"DM Sans",sans-serif;font-size:13px;line-height:1.7;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none;resize:vertical;box-shadow:var(--shadow)}
+.notes-area:focus{border-color:var(--accent)}
+.note-chip{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:8px;font-size:12.5px;line-height:1.6;position:relative}
+.note-chip:hover{border-color:var(--accent)}
+.note-chip-del{position:absolute;top:8px;right:10px;font-size:18px;color:var(--muted);cursor:pointer;line-height:1;background:none;border:none;padding:0}
+.note-date{font-size:10px;color:var(--muted);margin-bottom:4px}
+.etabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--border)}
+.etabs::-webkit-scrollbar{height:3px}
+.etabs::-webkit-scrollbar-thumb{background:var(--border)}
+.etab{font-size:11px;font-weight:500;padding:8px 12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .12s;white-space:nowrap;flex-shrink:0}
+.etab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.econtent{padding:14px 18px;display:none}
+.econtent.active{display:block}
+.eslbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.esubj{font-size:13px;font-weight:500;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--border)}
+.ebody{font-size:12px;line-height:1.7;color:#333;white-space:pre-line;max-height:260px;overflow-y:auto}
+.copy-btn{display:block;width:100%;margin-top:12px;font-family:"DM Sans",sans-serif;font-size:11px;font-weight:500;padding:8px;background:var(--ink);color:#fff;border:none;border-radius:6px;cursor:pointer}
+.copy-btn:hover{opacity:.8}
+.copy-btn.copied{background:var(--green)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.modal{background:var(--card);border-radius:var(--r);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-hdr{padding:16px 20px 13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card);z-index:1}
+.modal-hdr h2{font-family:"Syne",sans-serif;font-size:15px;font-weight:700}
+.mclose{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+.modal-body{padding:16px 20px}
+.mlbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;margin-top:12px;display:block}
+.mlbl:first-child{margin-top:0}
+.minp,.msel,.mtxt{width:100%;font-family:"DM Sans",sans-serif;font-size:13px;padding:9px 11px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--ink);outline:none}
+.minp:focus,.msel:focus,.mtxt:focus{border-color:var(--accent)}
+.mtxt{resize:vertical;min-height:70px}
+.modal-footer{padding:13px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--card)}
+.mbtn-c{font-family:"DM Sans",sans-serif;font-size:12px;padding:8px 16px;background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--muted)}
+.mbtn-s{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer}
+.mbtn-d{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;padding:8px 16px;background:#fdecea;color:var(--accent);border:1px solid rgba(232,93,38,.3);border-radius:6px;cursor:pointer;margin-right:auto}
+.two-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:500px){.two-grid{grid-template-columns:1fr}}
+.gen-body{font-size:12.5px;line-height:1.7;white-space:pre-line;background:var(--bg);padding:13px;border-radius:6px;border:1px solid var(--border);max-height:380px;overflow-y:auto}
+.cf{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .12s;white-space:nowrap;font-family:"DM Sans",sans-serif}
+.cf:hover,.cf.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+.empty-state .ei{font-size:32px;margin-bottom:10px;opacity:.3}
 
-    .title-box {
-      font-size: 12px;
-      inline-size: max-content;
-    }
+/* MARKET MAP */
+.map-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.map-search{flex:1;min-width:200px;font-family:"DM Sans",sans-serif;font-size:13px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none;box-shadow:var(--shadow)}
+.map-search:focus{border-color:var(--accent)}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.sector-card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.sector-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sector-name{font-family:"Syne",sans-serif;font-size:14px;font-weight:700}
+.sector-count{font-size:10px;font-weight:600;background:var(--ink);color:#fff;padding:2px 8px;border-radius:20px}
+.sub-group{padding:8px 16px 10px;border-bottom:1px solid var(--card2)}
+.sub-group:last-child{border-bottom:none}
+.sub-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#aaa;margin-bottom:6px}
+.co-pills{display:flex;flex-wrap:wrap;gap:4px}
+.co-pill{font-size:11px;padding:4px 10px;border:1px solid;border-radius:4px;cursor:default;transition:all .12s;line-height:1.5;position:relative;display:inline-block}
+.co-pill.hot{border-color:rgba(232,93,38,.5);color:var(--accent);background:rgba(232,93,38,.04)}
+.co-pill.warm{border-color:rgba(196,154,0,.5);color:#8a6b00;background:rgba(196,154,0,.04)}
+.co-pill.build{border-color:#ccc;color:#666;background:#fafafa}
+.co-pill.in-tracker{background:#e8f5ee;border-color:rgba(26,122,74,.4);color:var(--green)}
+.co-pill.deleted{display:none}
+.pill-actions{position:absolute;top:calc(100% + 3px);left:0;background:var(--ink);border-radius:5px;padding:5px;display:none;gap:4px;z-index:50;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.25);min-width:140px}
+.co-pill:hover .pill-actions{display:flex}
+.pill-add{font-size:10px;background:var(--accent);color:#fff;border:none;border-radius:3px;padding:3px 8px;cursor:pointer;font-family:"DM Sans",sans-serif;white-space:nowrap;font-weight:500}
+.pill-del{font-size:10px;background:#dc2626;color:#fff;border:none;border-radius:3px;padding:3px 8px;cursor:pointer;font-family:"DM Sans",sans-serif;white-space:nowrap;font-weight:500}
+.pill-add:hover{opacity:.85}
+.pill-del:hover{opacity:.85}
+.co-pill.in-tracker .pill-add{background:var(--green)}
+.map-legend{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:500}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+.leg-dot.hot{background:var(--accent)}
+.leg-dot.warm{background:#b8860b}
+.leg-dot.build{background:#ccc}
+.leg-dot.added{background:var(--green)}
+/* BD TRACKER */
+.bd-toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.bd-search{flex:1;min-width:200px;font-family:"DM Sans",sans-serif;font-size:13px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none;box-shadow:var(--shadow)}
+.bd-search:focus{border-color:var(--accent)}
+.bd-stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:16px}
+.bd-stat{background:var(--card);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow);text-align:center}
+.bd-stat-n{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;line-height:1}
+.bd-stat-l{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:3px}
+.bd-table{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;overflow-x:auto}
+.bd-head{display:grid;grid-template-columns:180px 1fr 130px 80px 90px 70px;min-width:700px;background:var(--ink);color:#fff;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.bd-row{display:grid;grid-template-columns:180px 1fr 130px 80px 90px 70px;min-width:700px;border-bottom:1px solid var(--border);align-items:center;transition:background .12s;min-height:46px}
+.bd-row:last-child{border-bottom:none}
+.bd-row:hover{background:var(--bg)}
+.bd-cell{padding:8px 12px;font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.bd-co-name{font-weight:600;font-size:12.5px}
+.bd-co-sector{font-size:10px;color:var(--muted);margin-top:1px}
+.bd-cell select{font-family:"DM Sans",sans-serif;font-size:11px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;background:var(--bg);color:var(--ink);outline:none;width:100%}
+.bd-cell select:focus{border-color:var(--accent)}
+.bd-act-btns{display:flex;gap:3px;padding:4px 8px}
 
-    .err-box {
-      padding: 1em;
-      max-width: 30em;
-      width: 100vw;
-    }
+/* CONTACTS AND ACTIVITY */
+.bd-row-expanded{background:var(--bg);border-bottom:2px solid var(--border);padding:0}
+.bd-detail{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;min-width:700px}
+.bd-detail-section{padding:14px 16px;border-right:1px solid var(--border)}
+.bd-detail-section:last-child{border-right:none}
+.bd-detail-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:6px;font-size:11.5px}
+.contact-name{font-weight:600;font-size:12px}
+.contact-title{color:var(--muted);font-size:11px;margin-top:1px}
+.contact-links{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.contact-link{font-size:10px;padding:2px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted);cursor:pointer;text-decoration:none;background:var(--bg)}
+.contact-link:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.contact-del{font-size:10px;background:none;border:none;color:#ccc;cursor:pointer;margin-left:auto;float:right}
+.contact-del:hover{color:#dc2626}
+.activity-item{padding:7px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+.activity-item:last-child{border-bottom:none}
+.activity-type{display:inline-block;font-size:9px;font-weight:600;padding:1px 6px;border-radius:3px;margin-right:5px;text-transform:uppercase;letter-spacing:.05em}
+.at-call{background:#e8f0fb;color:var(--blue)}
+.at-email{background:#fdecea;color:var(--accent)}
+.at-linkedin{background:#e8f5ee;color:var(--green)}
+.at-meeting{background:#fff8e7;color:var(--gold)}
+.at-note{background:var(--card2);color:var(--muted)}
+.activity-note{color:var(--muted);font-size:11px;margin-top:2px;line-height:1.4}
+.activity-date{font-size:10px;color:#aaa;float:right}
+.add-contact-form{background:var(--card2);border-radius:6px;padding:10px;margin-top:6px}
+.add-activity-form{background:var(--card2);border-radius:6px;padding:10px;margin-top:6px}
+.mini-inp{width:100%;font-family:"DM Sans",sans-serif;font-size:11px;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--card);color:var(--ink);outline:none;margin-bottom:5px}
+.mini-inp:focus{border-color:var(--accent)}
+.mini-sel{width:100%;font-family:"DM Sans",sans-serif;font-size:11px;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--card);color:var(--ink);outline:none;margin-bottom:5px;cursor:pointer}
+.mini-btn{font-family:"DM Sans",sans-serif;font-size:10px;font-weight:600;padding:5px 12px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;width:100%}
+.mini-btn:hover{opacity:.85}
+/* STALENESS */
+.bd-row.stale-warn{border-left:3px solid var(--gold)}
+.bd-row.stale-red{border-left:3px solid var(--accent)}
+.stale-badge{font-size:9px;font-weight:600;padding:1px 6px;border-radius:3px;white-space:nowrap}
+.stale-7{background:#fff8e7;color:var(--gold)}
+.stale-14{background:#fdecea;color:var(--accent)}
+.stale-ok{background:#e8f5ee;color:var(--green)}
+.expand-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:2px 4px;transition:transform .15s}
+.expand-btn.open{transform:rotate(90deg)}
 
-    .message {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+/* JOB SIGNALS */
+.signals-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.signals-grid{grid-template-columns:1fr}}
+.feed-card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.feed-card-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.feed-card-title{font-family:"Syne",sans-serif;font-size:14px;font-weight:700}
+.feed-refresh{font-size:10px;font-weight:600;padding:4px 10px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:"DM Sans",sans-serif}
+.feed-refresh:hover{opacity:.85}
+.feed-item{padding:10px 16px;border-bottom:1px solid var(--border);transition:background .12s}
+.feed-item:last-child{border-bottom:none}
+.feed-item:hover{background:var(--bg)}
+.feed-item-title{font-size:13px;font-weight:500;color:var(--ink);line-height:1.4}
+.feed-item-title a{color:var(--ink);text-decoration:none}
+.feed-item-title a:hover{color:var(--accent)}
+.feed-item-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap}
+.feed-item-date{font-size:10px;color:#aaa}
+.feed-loading{padding:20px;text-align:center;color:var(--muted);font-size:12px}
+.feed-error{padding:14px 16px;font-size:12px;color:var(--accent)}
+.li-btn{display:block;width:100%;text-align:left;padding:10px 14px;border:1px solid var(--border);border-radius:6px;margin-bottom:8px;background:var(--card);cursor:pointer;transition:all .12s;text-decoration:none;font-family:"DM Sans",sans-serif}
+.li-btn:hover{border-color:#0077b5;background:#f0f7ff}
+.li-btn-title{font-size:13px;font-weight:600;color:#0077b5}
+.li-btn-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.seek-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:#e8f0fb;color:var(--blue)}
+.signals-summary{background:var(--ink);color:#f7f3ec;border-radius:var(--r);padding:14px 18px;margin-bottom:18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.sig-stat{text-align:center}
+.sig-stat-n{font-family:"Syne",sans-serif;font-size:24px;font-weight:800;color:var(--accent);line-height:1}
+.sig-stat-l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#aaa;margin-top:2px}
+.last-checked{font-size:11px;color:#888;margin-left:auto}
 
-    @media (max-width: 500px) {
-      .message {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
+/* FEED CTA BUTTONS */
+.cta-btn{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;cursor:pointer;font-family:"DM Sans",sans-serif;border:none;transition:all .12s;text-decoration:none;display:inline-block}
+.cta-seek{background:#e8f0fb;color:var(--blue)}
+.cta-seek:hover{background:#d0e0f7}
+.cta-call{background:#e8f5ee;color:var(--green)}
+.cta-call:hover{background:#c8ebd6}
+.cta-email{background:#fef3e2;color:#b45309}
+.cta-email:hover{background:#fde8c0}
+.cta-float{background:#f3e8ff;color:#7c3aed}
+.cta-float:hover{background:#e8d5ff}
+.cta-add{background:#fdecea;color:var(--accent)}
+.cta-add:hover{background:#fbd5d0}
 
-    .ascii {
-      font-size: 6px;
-      text-align: center;
-      opacity: .8;
-    }
+/* EMAIL MODAL */
+.email-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center}
+.email-modal{background:var(--card);border-radius:var(--r);box-shadow:0 20px 60px rgba(0,0,0,.3);width:680px;max-width:95vw;max-height:85vh;overflow-y:auto}
+.email-modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.email-modal-title{font-family:"Syne",sans-serif;font-size:16px;font-weight:800}
+.email-modal-body{padding:20px}
+.email-field{margin-bottom:14px}
+.email-field label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.email-field input,.email-field textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:"DM Sans",sans-serif;font-size:13px;background:var(--bg);color:var(--ink);box-sizing:border-box}
+.email-field textarea{min-height:200px;resize:vertical;line-height:1.7}
+.email-modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.email-copy-btn{padding:8px 18px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.email-copy-btn:hover{opacity:.85}
+.email-outlook-btn{padding:8px 18px;background:#0078d4;color:#fff;border:none;border-radius:5px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.email-close-btn{padding:8px 18px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer}
 
-    .console {
-      background-color: #0e1628;
-      color: #fff;
-      font-family: "IBM Plex Sans", "sans";
-      padding: 1em;
-      margin: 1em;
-    }
+/* FOLLOW-UP ENGINE */
+.followup-engine{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}
+.followup-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.followup-hdr-title{font-family:"Syne",sans-serif;font-size:14px;font-weight:800}
+.followup-count{font-size:11px;font-weight:700;background:var(--accent);color:#fff;padding:2px 8px;border-radius:20px}
+.followup-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
+.followup-item:last-child{border-bottom:none}
+.followup-item:hover{background:var(--bg)}
+.followup-urgency{width:6px;border-radius:3px;flex-shrink:0;align-self:stretch;min-height:40px}
+.urgency-hot{background:#dc2626}
+.urgency-warm{background:#f59e0b}
+.urgency-cool{background:#3b82f6}
+.followup-content{flex:1;min-width:0}
+.followup-who{font-size:13px;font-weight:700;color:var(--ink)}
+.followup-why{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
+.followup-days{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-left:6px}
+.days-overdue{background:#fee2e2;color:#dc2626}
+.days-due{background:#fef3c7;color:#d97706}
+.days-soon{background:#dbeafe;color:#2563eb}
+.followup-actions{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.fu-btn{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;cursor:pointer;border:none;font-family:"DM Sans",sans-serif;transition:all .12s}
+.fu-call{background:#e8f5ee;color:var(--green)}
+.fu-email{background:#fef3e2;color:#b45309}
+.fu-done{background:#f3f4f6;color:#6b7280}
+.fu-snooze{background:#f3f4f6;color:#6b7280}
+.followup-empty{padding:20px;text-align:center;color:var(--muted);font-size:12px}
 
-    .footer {
-      margin: 1em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+/* DAILY BRIEFING */
+.briefing-card{background:var(--ink);color:#f7f3ec;border-radius:var(--r);padding:18px 20px;margin-bottom:18px}
+.briefing-greeting{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;margin-bottom:4px}
+.briefing-sub{font-size:12px;color:#aaa;margin-bottom:16px}
+.briefing-tasks{display:flex;flex-direction:column;gap:8px}
+.bt-item{background:rgba(255,255,255,.06);border-radius:8px;padding:10px 14px;border-left:3px solid var(--accent);display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:background .12s}
+.bt-item:hover{background:rgba(255,255,255,.1)}
+.bt-item.bt-done{opacity:.4;border-left-color:#555;text-decoration:none}
+.bt-priority{width:6px;border-radius:3px;flex-shrink:0;align-self:stretch;min-height:36px}
+.bt-p-urgent{background:#dc2626}
+.bt-p-high{background:#f59e0b}
+.bt-p-normal{background:#3b82f6}
+.bt-text{flex:1}
+.bt-title{font-size:13px;font-weight:600;color:#f7f3ec;line-height:1.4}
+.bt-why{font-size:11px;color:#aaa;margin-top:2px;line-height:1.5}
+.bt-actions{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.bt-btn{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;cursor:pointer;border:none;font-family:"DM Sans",sans-serif;transition:all .12s}
+.bt-call{background:#e8f5ee;color:#166534}
+.bt-email{background:#fef3e2;color:#b45309}
+.bt-done-btn{background:rgba(255,255,255,.1);color:#aaa}
+.bt-snooze{background:rgba(255,255,255,.1);color:#aaa}
+.bt-check{width:18px;height:18px;border-radius:50%;border:2px solid #555;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .12s}
+.bt-check:hover{border-color:var(--green);background:rgba(22,163,74,.2)}
+.bt-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.briefing-footer{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center}
+.briefing-score{font-size:11px;color:#aaa}
+.briefing-score span{color:var(--accent);font-weight:700}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:#dc2626;display:inline-block;margin-left:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-    .link-icon {
-      margin-right: 20px;
-      margin-top: 4px;
-    }
+.signal-seek-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:10px;text-decoration:none;transition:all .15s}
+.signal-seek-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(232,93,38,.12);transform:translateY(-1px)}
+.signal-seek-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.signal-seek-meta{font-size:10px;color:var(--muted);margin-bottom:5px}
+.signal-seek-cta{font-size:11px;font-weight:600;color:var(--accent)}
 
-    a {
-      color: #c2c8cc;
-    }
-  </style>
-
-  <script>
-    var reload_timeout = setTimeout(function () {
-      window.location.reload();
-    }, 60000);
-  </script>
+/* CV UPLOAD */
+.cv-upload-zone{border:2px dashed var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;background:var(--card);margin-bottom:16px}
+.cv-upload-zone:hover,.cv-upload-zone.dragover{border-color:var(--accent);background:rgba(232,93,38,.04)}
+.cv-upload-icon{font-size:28px;margin-bottom:8px}
+.cv-upload-label{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.cv-upload-sub{font-size:11px;color:var(--muted)}
+.cv-processing{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:14px;border-left:3px solid var(--accent);display:none}
+.cv-processing.visible{display:block}
+.cv-processing-title{font-size:13px;font-weight:600;margin-bottom:6px}
+.cv-processing-status{font-size:11px;color:var(--muted)}
+.cv-result{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;border-left:3px solid var(--green)}
+.cv-result-name{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;margin-bottom:4px}
+.cv-result-role{font-size:12px;color:var(--muted);margin-bottom:10px}
+.cv-result-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.cv-field{font-size:11px}
+.cv-field label{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-size:9px;margin-bottom:2px}
+.cv-field input,.cv-field select{width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-family:"DM Sans",sans-serif;font-size:12px;background:var(--bg);color:var(--ink)}
+.cv-field-full{grid-column:1/-1}
+.cv-add-btn{width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.cv-add-btn:hover{opacity:.85}
+</style>
 </head>
-
 <body>
-  <div class="err-box">
-    <div class="message">
-      <pre class="ascii">
+<div class="topbar">
+  <div><h1>Daily <span>Focus</span></h1><p>Change Recruitment &nbsp; Alex Hamilton &nbsp; 0405 140 138</p></div>
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div class="streak"><span style="font-size:18px">&#128293;</span><div><div class="streak-n" id="streak-n">1</div><div class="streak-l">day streak</div></div></div>
+    <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:600;color:#aaa;text-align:right" id="date-el"></div>
+  </div>
+</div>
+<div class="nav-tabs">
+  <button class="ntab active" onclick="showPage('today',this)">Today</button>
+  <button class="ntab" onclick="showPage('map',this)">&#127758; Market Map</button>
+  <button class="ntab" onclick="showPage('bdtracker',this)">BD Tracker</button>
+  <button class="ntab" onclick="showPage('roles',this)">Live Roles</button>
+  <button class="ntab" onclick="showPage('candidates',this)">Hot Candidates</button>
+  <button class="ntab" onclick="showPage('stats',this)">Weekly Stats</button>
+  <button class="ntab" onclick="showPage('notes',this)">Quick Notes</button>
+  <button class="ntab" onclick="showPage('emails',this)">Email Drafts</button>
+  <button class="ntab" onclick="showPage('signals',this)">&#128268; Job Signals</button>
+</div>
 
-                                  -%%%%%%%%%%%##**++==---::....                                     
-                                  *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%##*+=--::...              
-                                  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#*######******##*****+           
-                                 .#@%**+++**##%%@@@@@@@@@@@@@@@@@@%#*#*******************:          
-                                 .#@#*+.-*######%%%%#**+++++=+#@@%%#*#####***************+          
-                                 .#@#*=:=***####%%%%%%%%%%%%%#%@@%##*####*****************:         
-                                 .%@#*--+****######%%%%%%%%%%%@@@%##*#####***************+:         
-                                 :%@##-=+****########%%%%%%%%%@@@%##*####****************+.         
-                                 :%@#*-===+++**########%%%%%%@@@@%#**#####**************+*.         
-                                 :@@#*-====++++**###########%%@@@%#*######**************+*          
-                                 -@@#*--====+++++++*****#####%@@@%#*#######*************++          
-                                 -@@#*--======++++++++++*****#@@%%#*#####***************++          
-                                 -@%#*--========+++++++++++++#@@%%#*######**************++          
-                                 =@%#*--=================+===#@@%%#*##*****************++=          
-                                 =@%#*---====================#@@%#**#####*#************++=          
-                                 =@%#*----===================%@@%#*########************++-          
-                                 +@%%@#*+====================@@@%#*######*************+++-          
-                                 +@@@@@@@@@%%*==============-@@@%#*###*#**************+++:          
-                                 +@@@@@@@@@@@@@@@@@@@#+======@@@%#**##****************+++:          
-                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%***#****************++++.          
-                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%********************++++.          
-                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%*******************+++++           
-                                 *@@@@@@@@@@@@@##@@@@@@@@@@@@@@%#******************+++++=           
-                                 #@%%@@@@@@@@@@@@@%#-:=*#%%@@@@%#*****************++++++=           
-                                .#@@@@@@@@@@@@@@@@@@@@@%=::*@@@%#*****************++++++=           
-                                 +##%%@@@@@@@@@@@@@@@@@@@@@@@@@%*****************++++++=-           
-                    .*%#*#%##:     .:+####%%%@@@@@@@@@@@@@@@@@@%*****************+++=+==-           
-                .:*@%##+**++%%#%%*-:.-++===**##%%%@@@@@@@@@@@@@%***************+++=+=+==:           
-              -*%%%##%*#+*****+#**##%%%#*=======++*##%%%%@@@@@%#************++*++++++-.             
-           -%@@#%#**+#+##+**=#*+#*+#+##+#%@@#+=========+####%%##*********+++++++++:.                
-       .=%@@@@##*+*#+##*+#+##***+**+**+#*+#**#%%@#++======-==+*=--=****++*+**+=:                 .:.
-     .*@@@@@@@%*##*###**+#***#+*#**#*+#***#=*+*#**%%%%#*+=====::++*****+***-:                    :. 
-      +%@@@@@@@@@@########**#+#*+**+#*+*#*+#*+##+**+####%@@@#====++*****:                       ::  
-       -*##%@@@@@@@@@%########*+#+*#*+*#+#*****=#*+*#****%@@@@@@#-=+=:                         :-   
-         .:=*#%%@@@@@@@@@@%#########+*+##*+**+###******%@@@@@@%#*:......                      ::    
-              .*##%%@@@@@@@@@@%###*+####+*%%####****#@@@@@@@##**=--=-==++++.               .-=.     
-                 .-+#%%@@@@@@@@@@@%###*+##*=+##***%@@@@@@%#**+-.:..   ..:-==:         .:--:.        
-                     .-*#%%@@@@@@@@@@@%##**%%%%%@@@@@@@%#**+: .:=#**==-+---:.:----::::.             
-                         :+##%%@@@@@@@@@@@@@@@@@@@@@@##**+-. :#@#####***+--=.                       
-                            .-+#%%%@@@@@@@@@@@@@@@%#**+-. .+@@@@@@@@%%%@@@%-                        
-                                .:*##%%@@@@@@@@@%#**+: .=%@@@@@@@@@@@@@@##*=                        
-                                    .-*##%%@@@#**+=. .*@@@@@@@@@@@@@@%#*****.                       
-                                        :=*##**+-.   =@@@@@@@@@@@@@%#****+-.                        
-                                           .::.      +@@@@@@@@@@@#****+-.                           
-                                                      :+#%@@@@@#***+=.                              
-
-        </pre>
-      <div class="title-box">
-        <h1>Run this app to see the results here.</h1>
+<!-- TODAY PAGE -->
+<div class="page active" id="page-today">
+  <div class="two-col">
+    <div>
+      <div class="mot"><div class="mot-text" id="mot-text">Start small. One call changes everything.</div><div class="mot-sub">Today: get 5 things done before lunch.</div></div>
+      <div class="prog-card">
+        <div class="slbl" style="margin-bottom:10px">Today's progress</div>
+        <div class="prog-hdr"><div class="prog-n" id="prog-n">0 <span style="font-size:13px;font-weight:400;color:var(--muted)">of 5 done</span></div><div style="font-size:12px;color:var(--muted)" id="prog-pct">0%</div></div>
+        <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+        <div class="prog-msg" id="prog-msg">Let's go. Knock out task 1 right now.</div>
+      </div>
+      <div class="week-card"><div style="padding:11px 16px 8px;border-bottom:1px solid var(--border)"><div class="slbl" style="margin:0">This week &nbsp;<span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:10px">* job search day</span></div></div><div class="week-row" id="week-row"></div></div>
+      <div class="slbl">Today's top 5</div>
+      <div class="tasks" id="task-list"></div>
+      <div class="add-form">
+        <input class="add-inp" id="new-task-inp" placeholder="Add a task e.g. Call Sarah at Nunn Media">
+        <select class="add-sel" id="new-task-type"><option value="chase">Chase</option><option value="bd">BD</option><option value="candidate">Candidate</option><option value="admin">Admin</option></select>
+        <button class="add-btn" onclick="addTask()">Add</button>
       </div>
     </div>
-    <div class="footer">
-      <div class="link-icon">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M6.66668 8.66666C6.95298 9.04942 7.31825 9.36612 7.73771 9.59529C8.15717 9.82446 8.62102 9.96074 9.09778 9.99489C9.57454 10.029 10.0531 9.96024 10.5009 9.79319C10.9487 9.62613 11.3554 9.36471 11.6933 9.02666L13.6933 7.02666C14.3005 6.39799 14.6365 5.55598 14.6289 4.68199C14.6213 3.808 14.2708 2.97196 13.6527 2.35394C13.0347 1.73591 12.1987 1.38535 11.3247 1.37775C10.4507 1.37016 9.60869 1.70614 8.98001 2.31333L7.83334 3.45333M9.33334 7.33333C9.04704 6.95058 8.68177 6.63388 8.26231 6.4047C7.84285 6.17553 7.37901 6.03925 6.90224 6.00511C6.42548 5.97096 5.94695 6.03975 5.49911 6.20681C5.05128 6.37387 4.6446 6.63528 4.30668 6.97333L2.30668 8.97333C1.69948 9.602 1.3635 10.444 1.3711 11.318C1.37869 12.192 1.72926 13.028 2.34728 13.6461C2.96531 14.2641 3.80135 14.6147 4.67534 14.6222C5.54933 14.6298 6.39134 14.2939 7.02001 13.6867L8.16001 12.5467"
-            stroke="#C2C8CC" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card" id="api-panel">
+        <div class="card-hdr"><span class="card-title">API key</span><span id="api-ind" style="font-size:10px;color:var(--muted)">Not connected</span></div>
+        <div class="api-body"><p>Paste your Anthropic API key to enable AI job search and email drafting. Saved in your browser only.</p>
+          <div class="api-row"><input class="api-inp" id="api-inp" type="password" placeholder="sk-ant-api03-..."><button class="api-btn" onclick="saveKey()">Save</button></div>
+          <div class="api-st" id="api-st"></div>
+        </div>
       </div>
-      <div class="repl-links">
-        <a href="https://replit.com">Go to Replit</a>
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">Live job search</span><span class="bdg bdg-mut">Mon and Thu</span></div>
+        <div style="padding:10px 18px 0"><p style="font-size:11.5px;color:var(--muted);line-height:1.6">Searches your target companies for active roles. Use each result as a same-day outreach trigger.</p></div>
+        <button class="search-btn" id="search-btn" onclick="runSearch()">Search for live roles now</button>
+        <div class="search-st" id="search-st"></div>
+        <div id="job-results"></div>
       </div>
-      <div></div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">BD Tracker snapshot</span><span id="bd-snap-count" class="bdg bdg-mut">0 tracked</span></div>
+        <div style="padding:10px 18px 4px" id="bd-snap"><p style="font-size:11px;color:var(--muted)">No companies tracked yet. Visit the BD Tracker tab to get started.</p></div>
+        <div style="padding:0 18px 12px"><button class="add-btn" style="width:100%;font-size:11px" onclick="document.querySelectorAll('.ntab')[2].click()">Open BD Tracker</button></div>
+      </div>
+      <div class="card"><div class="card-hdr"><span class="card-title">Suggested tasks</span><span style="font-size:11px;color:var(--muted)">Tap to add</span></div><div id="sug-list"></div></div>
     </div>
   </div>
-</body>
+</div>
 
+
+<!-- MARKET MAP PAGE -->
+<div class="page" id="page-map">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">Market Map 2025</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:3px">250+ Australian companies. Hover any company to add to BD Tracker or delete from map.</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span id="map-added-count" style="font-size:12px;color:var(--green);font-weight:500"></span>
+      <button class="add-btn" onclick="openAddCompanyModal('both')">+ Add company</button>
+    </div>
+  </div>
+  <div class="map-controls">
+    <input class="map-search" id="map-search" placeholder="Search companies..." oninput="filterMap()">
+    <button class="cf on" onclick="setMapFilter('all',this)" id="mf-all">All</button>
+    <button class="cf" onclick="setMapFilter('hot',this)" id="mf-hot">Hot only</button>
+    <button class="cf" onclick="setMapFilter('not-added',this)" id="mf-na">Not in tracker</button>
+    <button class="cf" onclick="setMapFilter('added',this)" id="mf-added">In tracker</button>
+  </div>
+  <div class="map-legend">
+    <div class="leg-item"><div class="leg-dot hot"></div>Hot priority</div>
+    <div class="leg-item"><div class="leg-dot warm"></div>Warm pipeline</div>
+    <div class="leg-item"><div class="leg-dot build"></div>Build relationship</div>
+    <div class="leg-item"><div class="leg-dot added"></div>Added to tracker</div>
+  </div>
+  <div class="map-grid" id="map-grid"></div>
+</div>
+
+<!-- BD TRACKER PAGE -->
+<div class="page" id="page-bdtracker">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">BD Tracker</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:3px">All companies in your pipeline. Add from Market Map or manually. Delete any time.</p>
+    </div>
+    <button class="add-btn" onclick="openAddCompanyModal('bd')">+ Add manually</button>
+  </div>
+  <div class="bd-stats-row" id="bd-stats-row"></div>
+  <div class="bd-toolbar">
+    <input class="bd-search" id="bd-search" placeholder="Search by company, contact, notes..." oninput="renderBD()">
+    <select class="add-sel" id="bd-filter-status" onchange="renderBD()">
+      <option value="all">All status</option>
+      <option>Not contacted</option><option>Connected</option><option>Email sent</option>
+      <option>Call booked</option><option>Meeting held</option><option>Brief received</option><option>Placed</option>
+    </select>
+    <select class="add-sel" id="bd-filter-sector" onchange="renderBD()">
+      <option value="all">All sectors</option>
+      <option>Indie Media Agency</option><option>Retail Media</option><option>Ecommerce</option>
+      <option>Digital Media</option><option>Adtech</option><option>OOH and Audio</option><option>Holding Group</option>
+    </select>
+  </div>
+  <div class="bd-table">
+    <div class="bd-head" style="grid-template-columns:40px 180px 1fr 130px 80px 110px 80px">
+      <div class="bd-cell"></div>
+      <div class="bd-cell">Company</div>
+      <div class="bd-cell">Last contact</div>
+      <div class="bd-cell">Status</div>
+      <div class="bd-cell">Priority</div>
+      <div class="bd-cell">Staleness</div>
+      <div class="bd-cell">Actions</div>
+    </div>
+    <div id="bd-rows"></div>
+  </div>
+</div>
+
+<!-- ADD COMPANY MODAL -->
+<div class="overlay" id="add-co-ov" onclick="if(event.target===this)closeModal('add-co-ov')">
+  <div class="modal">
+    <div class="modal-hdr"><h2 id="add-co-title">Add Company</h2><button class="mclose" onclick="closeModal('add-co-ov')">x</button></div>
+    <div class="modal-body">
+      <label class="mlbl">Company name *</label><input class="minp" id="add-co-name" placeholder="e.g. Nunn Media">
+      <label class="mlbl">Sector</label>
+      <select class="msel" id="add-co-sector">
+        <option>Indie Media Agency</option><option>Retail Media</option><option>Ecommerce</option>
+        <option>Digital Media</option><option>Adtech</option><option>OOH and Audio</option><option>Holding Group</option>
+      </select>
+      <label class="mlbl">Priority</label>
+      <select class="msel" id="add-co-priority"><option value="hot">Hot</option><option value="warm">Warm</option><option value="build">Build</option></select>
+      <label class="mlbl">Notes</label><textarea class="mtxt" id="add-co-notes" placeholder="Why relevant, contact info, context..."></textarea>
+      <label class="mlbl">Add to</label>
+      <select class="msel" id="add-co-dest">
+        <option value="both">Market Map and BD Tracker</option>
+        <option value="map">Market Map only</option>
+        <option value="bd">BD Tracker only</option>
+      </select>
+    </div>
+    <div class="modal-footer"><button class="mbtn-c" onclick="closeModal('add-co-ov')">Cancel</button><button class="mbtn-s" onclick="saveAddCompany()">Add company</button></div>
+  </div>
+</div>
+
+<!-- bd-edit-modal removed, now inline -->
+
+<!-- LIVE ROLES PAGE -->
+<div class="page" id="page-roles">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div><h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">Live Roles</h2><p style="font-size:12px;color:var(--muted);margin-top:3px">Active briefs you are working right now</p></div>
+    <button class="add-btn" onclick="openRoleModal()">+ Add role</button>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+    <button class="cf on" onclick="filterRoles('all',this)">All</button>
+    <button class="cf" onclick="filterRoles('active-role',this)">Active</button>
+    <button class="cf" onclick="filterRoles('briefed',this)">Briefed</button>
+    <button class="cf" onclick="filterRoles('shortlisted',this)">Shortlisted</button>
+    <button class="cf" onclick="filterRoles('closed',this)">Closed</button>
+  </div>
+  <div id="roles-list"><div class="empty-state"><div class="ei">&#128188;</div><p>No roles yet. Add your first brief above.</p></div></div>
+</div>
+
+<!-- CANDIDATES PAGE -->
+<div class="page" id="page-candidates">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+    <div><h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">Hot Candidates</h2><p style="font-size:12px;color:var(--muted);margin-top:3px">Your best available talent. Search by name, skill or specialism.</p></div>
+    <button class="add-btn" onclick="openCandModal()">+ Add candidate</button>
+  </div>
+
+  <!-- CV UPLOAD SECTION -->
+  <div style="margin-bottom:18px">
+    <div class="slbl" style="margin-bottom:10px">&#128196; Upload CV to auto-add candidate</div>
+    <div class="cv-upload-zone" id="cv-drop-zone" onclick="document.getElementById('cv-file-input').click()">
+      <div class="cv-upload-icon">&#128196;</div>
+      <div class="cv-upload-label">Drop a CV here or click to upload</div>
+      <div class="cv-upload-sub">PDF or Word doc. Claude reads it and fills in the details automatically.</div>
+      <input type="file" id="cv-file-input" accept=".pdf,.doc,.docx" style="display:none" onchange="handleCVUpload(this.files[0])">
+    </div>
+    <div class="cv-processing" id="cv-processing">
+      <div class="cv-processing-title">&#129302; Reading CV...</div>
+      <div class="cv-processing-status" id="cv-processing-status">Extracting candidate details</div>
+    </div>
+    <div id="cv-result-container"></div>
+  </div>
+
+  <div style="position:relative;margin-bottom:12px">
+    <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input style="width:100%;font-family:DM Sans,sans-serif;font-size:13px;padding:10px 12px 10px 38px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none;box-shadow:var(--shadow)" id="cand-search" placeholder="Search by name, skill, platform e.g. The Trade Desk, Klaviyo, ecommerce..." oninput="renderCands()">
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap" id="cand-filters">
+    <button class="cf on" onclick="setCandFilter('all',this)">All</button>
+    <button class="cf" onclick="setCandFilter('Active',this)">Active</button>
+    <button class="cf" onclick="setCandFilter('Passive',this)">Passive</button>
+    <button class="cf" onclick="setCandFilter('Placed',this)">Placed</button>
+  </div>
+  <div class="cand-grid" id="cand-grid"></div>
+</div>
+
+<!-- STATS PAGE -->
+<div class="page" id="page-stats">
+  <div style="margin-bottom:16px"><h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">Weekly Stats</h2><p style="font-size:12px;color:var(--muted);margin-top:3px">Track your activity. Tap + or - to update.</p></div>
+  <div class="stats-grid" id="stats-grid"></div>
+  <div class="card" style="margin-bottom:16px"><div class="card-hdr"><span class="card-title">Progress to weekly targets</span></div><div style="padding:14px 18px" id="targets-section"></div></div>
+  <div class="card"><div class="card-hdr"><span class="card-title">Wins this week</span><button class="add-btn" style="font-size:10px;padding:5px 12px" onclick="addWin()">+ Add win</button></div><div style="padding:14px 18px" id="wins-list"><p style="font-size:12px;color:var(--muted)">No wins logged yet.</p></div></div>
+</div>
+
+<!-- NOTES PAGE -->
+<div class="page" id="page-notes">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+    <div><h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">Quick Notes</h2><p style="font-size:12px;color:var(--muted);margin-top:3px">Jot anything mid-call. Saves automatically.</p></div>
+    <button class="add-btn" onclick="saveNote()">Save as note</button>
+  </div>
+  <div class="two-col">
+    <div><textarea class="notes-area" id="notes-area" placeholder="Type anything here..."></textarea><div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:right" id="notes-meta">Auto-saved</div></div>
+    <div><div class="slbl">Saved notes</div><div id="saved-notes"><div class="empty-state"><div class="ei">&#128203;</div>No saved notes yet.</div></div></div>
+  </div>
+</div>
+
+<!-- EMAILS PAGE -->
+<div class="page" id="page-emails">
+  <div style="margin-bottom:16px"><h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">Email Drafts</h2><p style="font-size:12px;color:var(--muted);margin-top:3px">Ready-to-send templates in your voice. Copy straight into Gmail or Outlook.</p></div>
+  <div class="two-col">
+    <div class="card"><div class="etabs" id="main-email-tabs"></div><div id="main-email-panels"></div></div>
+    <div>
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">AI email generator</span><span class="bdg bdg-acc">Uses API</span></div>
+        <div style="padding:14px 18px">
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Type a company name and trigger to generate a personalised email on the spot.</p>
+          <label class="mlbl">Company name</label><input class="minp" id="gen-company" placeholder="e.g. Nunn Media" style="margin-bottom:10px">
+          <label class="mlbl">Trigger or context</label><input class="minp" id="gen-trigger" placeholder="e.g. just posted a Head of Performance role" style="margin-bottom:10px">
+          <button class="add-btn" style="width:100%" onclick="genEmailFromPage()">Generate email</button>
+          <div id="gen-result" style="margin-top:14px;display:none"><div class="gen-body" id="gen-body-text"></div><button class="copy-btn" id="gen-copy-page" onclick="copyGenPage()" style="margin-top:10px">Copy email</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="overlay" id="edit-ov" onclick="if(event.target===this)closeModal('edit-ov')">
+  <div class="modal">
+    <div class="modal-hdr"><h2>Edit task</h2><button class="mclose" onclick="closeModal('edit-ov')">x</button></div>
+    <div class="modal-body">
+      <label class="mlbl">Task</label><input class="minp" id="edit-text">
+      <label class="mlbl">Type</label><select class="msel" id="edit-type"><option value="chase">Chase</option><option value="bd">BD</option><option value="candidate">Candidate</option><option value="admin">Admin</option></select>
+      <label class="mlbl">Notes</label><textarea class="mtxt" id="edit-notes"></textarea>
+    </div>
+    <div class="modal-footer"><button class="mbtn-c" onclick="closeModal('edit-ov')">Cancel</button><button class="mbtn-s" onclick="saveTaskEdit()">Save</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="role-ov" onclick="if(event.target===this)closeModal('role-ov')">
+  <div class="modal">
+    <div class="modal-hdr"><h2 id="role-title">Add Role</h2><button class="mclose" onclick="closeModal('role-ov')">x</button></div>
+    <div class="modal-body">
+      <div class="two-grid">
+        <div><label class="mlbl">Company *</label><input class="minp" id="r-company" placeholder="Nunn Media"></div>
+        <div><label class="mlbl">Role *</label><input class="minp" id="r-role" placeholder="Head of Performance"></div>
+        <div><label class="mlbl">Salary range</label><input class="minp" id="r-salary" placeholder="$130-150k"></div>
+        <div><label class="mlbl">Fee estimate</label><input class="minp" id="r-fee" placeholder="$18,000"></div>
+        <div><label class="mlbl">Contact name</label><input class="minp" id="r-contact" placeholder="Sarah Smith"></div>
+        <div><label class="mlbl">Status</label><select class="msel" id="r-status"><option value="active-role">Active</option><option value="briefed">Briefed</option><option value="shortlisted">Shortlisted</option><option value="closed">Closed</option></select></div>
+      </div>
+      <label class="mlbl">Notes</label><textarea class="mtxt" id="r-notes" placeholder="Brief details, requirements..."></textarea>
+    </div>
+    <div class="modal-footer"><button class="mbtn-d" id="role-del-btn" onclick="deleteRole()" style="display:none">Delete</button><button class="mbtn-c" onclick="closeModal('role-ov')">Cancel</button><button class="mbtn-s" onclick="saveRole()">Save</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="cand-ov" onclick="if(event.target===this)closeModal('cand-ov')">
+  <div class="modal">
+    <div class="modal-hdr"><h2 id="cand-title">Add Candidate</h2><button class="mclose" onclick="closeModal('cand-ov')">x</button></div>
+    <div class="modal-body">
+      <div class="two-grid">
+        <div><label class="mlbl">Full name *</label><input class="minp" id="c-name" placeholder="Jane Smith"></div>
+        <div><label class="mlbl">Status</label><select class="msel" id="c-status"><option>Active</option><option>Passive</option><option>Placed</option><option>On hold</option></select></div>
+        <div><label class="mlbl">Current role</label><input class="minp" id="c-role" placeholder="Senior Performance Manager"></div>
+        <div><label class="mlbl">Current company</label><input class="minp" id="c-company" placeholder="EssenceMediacom"></div>
+        <div><label class="mlbl">Specialism</label><select class="msel" id="c-spec"><option value="">Select...</option><option>Digital media / programmatic</option><option>Performance / SEM / SEO</option><option>Ecommerce / DTC</option><option>Retail media</option><option>CRM / data / analytics</option><option>Social media</option><option>Strategy / planning</option><option>Account management</option></select></div>
+        <div><label class="mlbl">Seniority</label><select class="msel" id="c-sen"><option value="">Select...</option><option>Coordinator / Executive</option><option>Manager</option><option>Senior Manager</option><option>Head of</option><option>Director</option><option>C-suite / VP</option></select></div>
+        <div><label class="mlbl">Location</label><input class="minp" id="c-loc" placeholder="Sydney"></div>
+        <div><label class="mlbl">Availability</label><select class="msel" id="c-avail"><option value="">Select...</option><option>Immediate</option><option>2 weeks</option><option>1 month</option><option>3 months</option><option>Flexible</option></select></div>
+        <div><label class="mlbl">Target salary ($)</label><input class="minp" id="c-sal" placeholder="140,000"></div>
+        <div><label class="mlbl">Phone</label><input class="minp" id="c-phone" placeholder="0412 000 000"></div>
+      </div>
+      <label class="mlbl">Skills and platforms</label><input class="minp" id="c-skills" placeholder="Google Ads, DV360, Meta Ads... (comma separated)" style="margin-bottom:10px">
+      <label class="mlbl">Notes</label><textarea class="mtxt" id="c-notes" placeholder="Background, what they want, trigger to move..."></textarea>
+    </div>
+    <div class="modal-footer"><button class="mbtn-d" id="cand-del-btn" onclick="deleteCandidate()" style="display:none">Delete</button><button class="mbtn-c" onclick="closeModal('cand-ov')">Cancel</button><button class="mbtn-s" onclick="saveCandidate()">Save</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="gen-ov" onclick="if(event.target===this)closeModal('gen-ov')">
+  <div class="modal">
+    <div class="modal-hdr"><h2 id="gen-title">Draft email</h2><button class="mclose" onclick="closeModal('gen-ov')">x</button></div>
+    <div class="modal-body"><div id="gen-modal-body"></div></div>
+    <div class="modal-footer"><button class="mbtn-c" onclick="closeModal('gen-ov')">Close</button><button class="mbtn-s" id="gen-modal-copy" onclick="copyGenModal()">Copy email</button></div>
+  </div>
+</div>
+
+<script>
+const SK='afocus_v5',AK='afocus_api_v3';
+function load(){try{return JSON.parse(localStorage.getItem(SK))||null}catch(e){return null}}
+function save(){try{localStorage.setItem(SK,JSON.stringify(state))}catch(e){}}
+function getKey(){return localStorage.getItem(AK)||''}
+function storeKey(k){localStorage.setItem(AK,k)}
+const today=new Date(),todayStr=today.toISOString().slice(0,10),todayDay=today.getDay();
+let saved=load();
+if(saved&&!saved.bdCompanies)saved.bdCompanies=[];
+if(saved&&!saved.mapDeleted)saved.mapDeleted=[];
+if(saved&&!saved.customMapCompanies)saved.customMapCompanies=[];
+let state=saved||{bdCompanies:[],mapDeleted:[],customMapCompanies:[],tasks:[
+  {id:1,text:"Call Alley Group re Head of Performance brief",type:"chase",done:false,notes:""},
+  {id:2,text:"Follow up Efficiency Leaders",type:"chase",done:false,notes:""},
+  {id:3,text:"Chase Wired re ecommerce role",type:"chase",done:false,notes:""},
+  {id:4,text:"Send 3 LinkedIn connection requests to indie agencies",type:"bd",done:false,notes:""},
+  {id:5,text:"Add 2 candidates to Hot Candidates tab",type:"candidate",done:false,notes:""},
+],streak:1,weekHistory:{},nextId:6,lastDate:'',jobResults:[],lastJobRun:'',roles:[],nextRoleId:1,
+candidates:[
+  {id:1,name:"Jane Smith",role:"Senior Performance Manager",company:"EssenceMediacom",spec:"Performance / SEM / SEO",sen:"Senior Manager",loc:"Sydney",avail:"2 weeks",sal:"165,000",phone:"0412 000 001",skills:["Google Ads","DV360","SA360","Meta Ads","The Trade Desk","Campaign Manager 360","Programmatic"],notes:"Strong SEM background. WPP network. Open to agency or client side.",status:"Active",rating:5},
+  {id:2,name:"Tom Chen",role:"Ecommerce Manager",company:"THE ICONIC",spec:"Ecommerce / DTC",sen:"Manager",loc:"Melbourne",avail:"Immediate",sal:"125,000",phone:"0412 000 002",skills:["Shopify","Google Analytics 4","Google Ads","Meta Ads","CRO","Klaviyo","Digital Merchandising"],notes:"Fashion ecom specialist. Open to DTC brands.",status:"Active",rating:4},
+  {id:3,name:"Sarah Williams",role:"Head of Programmatic",company:"Cartology",spec:"Retail media",sen:"Head of",loc:"Sydney",avail:"3 months",sal:"200,000",phone:"0412 000 003",skills:["Retail media","The Trade Desk","DV360","First-party data","CitrusAd","Zitcha"],notes:"Top retail media talent. Only moves for the right role.",status:"Passive",rating:5},
+  {id:4,name:"David Park",role:"Programmatic Trading Manager",company:"Mindshare",spec:"Digital media / programmatic",sen:"Senior Manager",loc:"Sydney",avail:"2 weeks",sal:"155,000",phone:"0412 000 004",skills:["The Trade Desk","DV360","Xandr","Amazon DSP","CTV","Deal ID","PMP deals"],notes:"WPP background. Wants adtech vendor or indie agency.",status:"Active",rating:5},
+  {id:5,name:"Emma Davis",role:"CRM Manager",company:"Nunn Media",spec:"CRM / data / analytics",sen:"Manager",loc:"Melbourne",avail:"Flexible",sal:"130,000",phone:"0412 000 005",skills:["Salesforce Marketing Cloud","Klaviyo","HubSpot","SQL","Tableau","CDP","CRM strategy"],notes:"Strong martech stack. Agency and client side experience.",status:"Passive",rating:4},
+],nextCandId:6,stats:{calls:0,emails:0,meetings:0,cvs:0,placements:0,connections:0},currentWeek:'',wins:[],notes:'',savedNotes:[]};
+
+function getWeekKey(){const d=new Date(today);const dow=d.getDay();const diff=d.getDate()-(dow===0?6:dow-1);d.setDate(diff);return d.toISOString().slice(0,10);}
+if(state.lastDate&&state.lastDate!==todayStr){const prev=state.tasks.filter(t=>t.done).length;state.streak=prev>=3?(state.streak||0)+1:0;state.weekHistory[state.lastDate]=prev>=state.tasks.length;state.tasks=state.tasks.map(t=>({...t,done:false}));state.jobResults=[];}
+const wk=getWeekKey();if(state.currentWeek!==wk){state.stats={calls:0,emails:0,meetings:0,cvs:0,placements:0,connections:0};state.wins=[];state.currentWeek=wk;}
+state.lastDate=todayStr;save();
+let editingId=null,editingRoleId=null,editingCandId=null,candFilter='all',roleFilter='all',genEmailText='',genPageEmailText='',mainEmailTab=0;
+
+function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');if(id==='candidates'){renderCands();setTimeout(initCVUpload,100);}if(id==='stats')renderStats();if(id==='notes')renderSavedNotes();if(id==='emails')renderMainEmails();if(id==='map'){mapSearchQ='';if(document.getElementById('map-search'))document.getElementById('map-search').value='';renderMap();}if(id==='bdtracker'){renderBD();renderBDStats();}}
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+// API
+function saveKey(){const k=document.getElementById('api-inp').value.trim();if(!k.startsWith('sk-ant')){setApiSt('That does not look like a valid key. It should start with sk-ant','err');return;}storeKey(k);setApiSt('Key saved. AI features now active.','ok');document.getElementById('api-ind').textContent='Connected';document.getElementById('api-ind').style.color='var(--green)';document.getElementById('api-inp').value='';}
+function setApiSt(msg,type){const el=document.getElementById('api-st');el.textContent=msg;el.className='api-st '+(type==='ok'?'api-ok':'api-err');}
+if(getKey()){document.getElementById('api-ind').textContent='Connected';document.getElementById('api-ind').style.color='var(--green)';}
+
+const TARGETS=["Nunn Media","Hatched","Half Dome","This Is Flow","Involved Media","Sparro by Brainlabs","BCM Group","Claxon","Awaken","Match and Wood","Slingshot","The SPEED Agency","Bench Media","TFM Digital","PMG agency","Cartology","Coles 360","Zitcha","Adore Beauty","THE ICONIC","Temple and Webster","Mecca Brands","Pet Circle","Culture Kings","Princess Polly","Showpo","Nine Entertainment","News Corp Australia","The Trade Desk Australia","Rokt","Alley Group","Efficiency Leaders","Wired agency"];
+
+async function runSearch(){
+  const key=getKey();if(!key){alert('Please save your API key first.');return;}
+  const btn=document.getElementById('search-btn'),st=document.getElementById('search-st');
+  btn.disabled=true;btn.textContent='Searching...';st.innerHTML='<span class="spinner"></span> Searching across your target companies...';st.classList.add('show');document.getElementById('job-results').innerHTML='';
+  const prompt='You are a recruitment intelligence assistant for Alex Hamilton, a specialist digital media and ecommerce recruiter in Australia at Change Recruitment.\n\nBased on your knowledge of the Australian market in 2025, identify which companies from this list are most likely actively hiring for digital media, ecommerce, performance marketing, retail media, programmatic, CRM, data analytics, or commercial talent right now:\n\n'+TARGETS.join(', ')+'\n\nReturn a JSON array of 8 to 12 results. Each object must have: company (string), role (specific job title), sector (one of: Indie Media Agency, Ecommerce, Retail Media, Digital Media, Adtech), reason (one sentence why they are likely hiring), priority (hot or warm). Return ONLY the raw JSON array. No markdown. No explanation.';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'Error '+res.status);}
+    const data=await res.json();const text=data.content?.[0]?.text||'';
+    state.jobResults=JSON.parse(text.replace(/```json|```/g,'').trim());
+    state.lastJobRun=new Date().toLocaleString('en-AU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    save();st.classList.remove('show');btn.disabled=false;btn.textContent='Search again';renderJobs();
+  }catch(err){st.innerHTML='<span style="color:var(--accent)">Error: '+err.message+'</span>';btn.disabled=false;btn.textContent='Try again';}
+}
+
+function renderJobs(){
+  const area=document.getElementById('job-results');const results=state.jobResults;
+  if(!results||!results.length){area.innerHTML='<div style="padding:14px 18px;font-size:11.5px;color:var(--muted)">No results yet. Click search.</div>';return;}
+  const sorted=[...results.filter(r=>r.priority==='hot'),...results.filter(r=>r.priority!=='hot')];
+  area.innerHTML=sorted.map((r,i)=>'<div class="job-item"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div><div class="job-co">'+r.company+'</div><div class="job-role">'+r.role+'</div></div><span class="bdg '+(r.priority==='hot'?'bdg-red':'bdg-gld')+'">'+(r.priority==='hot'?'Hot':'Warm')+'</span></div><div class="job-meta">'+r.sector+'</div><div class="job-trigger">Trigger: '+r.reason+'</div><div class="job-acts"><button class="jact p" onclick="genJobEmail('+i+')">Draft email</button><button class="jact" onclick="addJobTask('+i+')">Add to tasks</button><button class="jact" onclick="addJobToRoles('+i+')">Add as role</button></div></div>').join('')+'<div class="last-run">Last run: '+state.lastJobRun+'</div>';
+}
+
+function buildEmailPrompt(company,role,trigger){return 'Write a short outreach email from Alex Hamilton, Principal Recruiter at Change Recruitment (0405 140 138, www.changerecruitment.com.au).\n\nRecipient: hiring decision maker at '+company+'\nRole context: '+role+'\nOutreach trigger: '+trigger+'\n\nAbout Alex: previously worked in house at WPP and Dentsu looking after agencies like Carat, iProspect, Mindshare and Ikon. Now recruits externally across digital media, ecommerce and performance marketing.\n\nRules:\n- Warm, genuine, conversational. Not corporate.\n- Reference the trigger naturally\n- Mention Alex has relevant candidates who may not be job hunting\n- Maximum 4 short paragraphs\n- No dashes anywhere\n- No bullet points\n- Do not use: straightforward, genuinely, honestly\n- End with full signature block\n\nFormat: Subject: [subject line]\n\n[email body]';}
+
+async function genJobEmail(idx){
+  const job=state.jobResults[idx];const key=getKey();if(!key){alert('API key required.');return;}
+  document.getElementById('gen-title').textContent='Email for '+job.company;
+  document.getElementById('gen-modal-body').innerHTML='<div style="text-align:center;padding:28px;color:var(--muted)"><span class="spinner"></span> Writing your email...</div>';
+  openModal('gen-ov');genEmailText='';
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:buildEmailPrompt(job.company,job.role,job.reason)}]})});const data=await res.json();genEmailText=data.content?.[0]?.text||'';document.getElementById('gen-modal-body').innerHTML='<div class="gen-body">'+genEmailText.replace(/\n/g,'<br>')+'</div>';}
+  catch(err){document.getElementById('gen-modal-body').innerHTML='<p style="color:var(--accent);font-size:12px">Error: '+err.message+'</p>';}
+}
+function copyGenModal(){if(!genEmailText)return;navigator.clipboard.writeText(genEmailText).catch(()=>{const ta=document.createElement('textarea');ta.value=genEmailText;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});const btn=document.getElementById('gen-modal-copy');btn.textContent='Copied!';btn.style.background='var(--green)';setTimeout(()=>{btn.textContent='Copy email';btn.style.background=''},2000);}
+function addJobTask(idx){const job=state.jobResults[idx];state.tasks.push({id:state.nextId++,text:'Chase '+job.company+' re '+job.role,type:'chase',done:false,notes:job.reason});save();renderTasks();updateProgress();renderSugs();}
+function addJobToRoles(idx){const job=state.jobResults[idx];state.roles.push({id:state.nextRoleId++,company:job.company,role:job.role,salary:'',fee:'',contact:'',status:'active-role',notes:job.reason,date:todayStr});save();renderRoles();}
+if(state.jobResults&&state.jobResults.length>0)renderJobs();
+if(todayDay===1||todayDay===4){const btn=document.getElementById('search-btn');btn.classList.add('sday');btn.textContent='Today is a search day. Find live roles now';}
+
+document.getElementById('date-el').textContent=today.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+document.getElementById('streak-n').textContent=state.streak||1;
+const MOTS=["Start small. One call changes everything.","Done is better than perfect. Pick up the phone.","The task you are avoiding is the one to do first.","Five tasks. That is it. Everything else can wait.","Your future self will thank you for doing this now.","Make the first call before you check your inbox.","The best time to follow up was yesterday. Now is second best."];
+const dn0=state.tasks.filter(t=>t.done).length;
+document.getElementById('mot-text').textContent=dn0===state.tasks.length&&state.tasks.length>0?"All done. Absolute legend.":MOTS[Math.floor(Math.random()*MOTS.length)];
+
+function renderWeek(){const row=document.getElementById('week-row');const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];const sw=new Date(today);const dow=today.getDay();sw.setDate(today.getDate()+(dow===0?-6:1-dow));row.innerHTML=days.map((d,i)=>{const day=new Date(sw);day.setDate(sw.getDate()+i);const ds=day.toISOString().slice(0,10);const isTod=ds===todayStr,isDone=state.weekHistory[ds],isSrch=(i===0||i===3);return '<div class="day'+(isTod?' today':isDone?' done-day':'')+'"><span class="dn">'+d+(isSrch?'*':'')+'</span><span class="dnum">'+day.getDate()+'</span><span style="font-size:9px">'+(isDone?'&#10003;':isTod?'&bull;':'')+'</span></div>';}).join('');}
+
+function updateProgress(){const d=state.tasks.filter(t=>t.done).length,t=state.tasks.length,pct=t?Math.round((d/t)*100):0;document.getElementById('prog-n').innerHTML=d+' <span style="font-size:13px;font-weight:400;color:var(--muted)">of '+t+' done</span>';document.getElementById('prog-pct').textContent=pct+'%';document.getElementById('prog-bar').style.width=pct+'%';document.getElementById('prog-bar').style.background=pct===100?'var(--green)':'var(--accent)';const msgs=["Let's go. Knock out task 1 right now.","Good start. Keep going.","Halfway. You are on a roll.","Almost there. Finish strong.","All done. That is how it is done."];document.getElementById('prog-msg').textContent=msgs[Math.min(Math.floor((d/Math.max(t,1))*4),4)];if(d===t&&t>0){document.getElementById('mot-text').textContent="All done. Absolute legend.";state.weekHistory[todayStr]=true;save();renderWeek();}}
+
+function tClass(t){return{chase:'tc',bd:'tb',candidate:'tca',admin:'ta'}[t]||'ta'}
+function tLabel(t){return{chase:'Chase',bd:'BD',candidate:'Candidate',admin:'Admin'}[t]||t}
+const EMAIL_MAP={'alley':'Alley Group','efficiency':'Efficiency Leaders','wired':'Wired'};
+
+function renderTasks(){
+  const list=document.getElementById('task-list');
+  if(!state.tasks.length){list.innerHTML='<div style="text-align:center;padding:28px;color:var(--muted);font-size:13px;background:var(--card);border-radius:var(--r)">No tasks yet. Add your top 5 above.</div>';return;}
+  list.innerHTML=state.tasks.map((t,i)=>{const eIdx=emailDrafts.findIndex(e=>Object.entries(EMAIL_MAP).some(([k,v])=>t.text.toLowerCase().includes(k)&&e.label===v));return '<div class="task'+(t.done?' done':'')+'" id="task-'+t.id+'"><div class="task-main"><span class="task-num">'+(i+1)+'</span><button class="tick" onclick="toggleTask('+t.id+')"><span class="tick-i">&#10003;</span></button><div class="task-body"><div class="task-text">'+t.text+'</div><div class="task-meta"><span class="ttag '+tClass(t.type)+'">'+tLabel(t.type)+'</span>'+(t.notes?'<span style="font-size:10px;color:var(--muted)">'+t.notes+'</span>':'')+'</div></div></div><div class="task-acts">'+(eIdx>=0?'<button class="tact em" onclick="jumpEmail('+eIdx+')">Draft email</button>':'')+'<button class="tact" onclick="openEdit('+t.id+')">Edit</button><button class="tact" onclick="delTask('+t.id+')">Remove</button></div></div>';}).join('');
+}
+function toggleTask(id){const t=state.tasks.find(t=>t.id===id);if(t)t.done=!t.done;save();renderTasks();updateProgress();}
+function addTask(){const inp=document.getElementById('new-task-inp'),type=document.getElementById('new-task-type').value,text=inp.value.trim();if(!text)return;state.tasks.push({id:state.nextId++,text,type,done:false,notes:''});inp.value='';save();renderTasks();updateProgress();renderSugs();}
+function delTask(id){state.tasks=state.tasks.filter(t=>t.id!==id);save();renderTasks();updateProgress();}
+function openEdit(id){const t=state.tasks.find(t=>t.id===id);editingId=id;document.getElementById('edit-text').value=t.text;document.getElementById('edit-type').value=t.type;document.getElementById('edit-notes').value=t.notes||'';openModal('edit-ov');}
+function saveTaskEdit(){const t=state.tasks.find(t=>t.id===editingId);t.text=document.getElementById('edit-text').value.trim()||t.text;t.type=document.getElementById('edit-type').value;t.notes=document.getElementById('edit-notes').value.trim();save();closeModal('edit-ov');renderTasks();}
+document.getElementById('new-task-inp').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
+
+// ROLES
+function openRoleModal(id){editingRoleId=id||null;document.getElementById('role-title').textContent=id?'Edit Role':'Add Role';document.getElementById('role-del-btn').style.display=id?'block':'none';if(id){const r=state.roles.find(r=>r.id===id);document.getElementById('r-company').value=r.company;document.getElementById('r-role').value=r.role;document.getElementById('r-salary').value=r.salary||'';document.getElementById('r-fee').value=r.fee||'';document.getElementById('r-contact').value=r.contact||'';document.getElementById('r-status').value=r.status;document.getElementById('r-notes').value=r.notes||'';}else{['r-company','r-role','r-salary','r-fee','r-contact','r-notes'].forEach(i=>document.getElementById(i).value='');document.getElementById('r-status').value='active-role';}openModal('role-ov');}
+function saveRole(){const company=document.getElementById('r-company').value.trim(),role=document.getElementById('r-role').value.trim();if(!company||!role){alert('Company and role are required.');return;}const data={company,role,salary:document.getElementById('r-salary').value.trim(),fee:document.getElementById('r-fee').value.trim(),contact:document.getElementById('r-contact').value.trim(),status:document.getElementById('r-status').value,notes:document.getElementById('r-notes').value.trim(),date:todayStr};if(editingRoleId){const idx=state.roles.findIndex(r=>r.id===editingRoleId);state.roles[idx]={...state.roles[idx],...data};}else{data.id=state.nextRoleId++;state.roles.unshift(data);}save();closeModal('role-ov');renderRoles();}
+function deleteRole(){if(!confirm('Remove this role?'))return;state.roles=state.roles.filter(r=>r.id!==editingRoleId);save();closeModal('role-ov');renderRoles();}
+function filterRoles(f,btn){roleFilter=f;document.querySelectorAll('#page-roles .cf').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderRoles();}
+const SLBL={['active-role']:'Active',briefed:'Briefed',shortlisted:'Shortlisted',closed:'Closed'};
+const SBDG={['active-role']:'bdg-red',briefed:'bdg-blue',shortlisted:'bdg-gld',closed:'bdg-grn'};
+function renderRoles(){
+  const list=document.getElementById('roles-list');const filtered=roleFilter==='all'?state.roles:state.roles.filter(r=>r.status===roleFilter);
+  if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="ei">&#128188;</div><p>'+(state.roles.length?'No roles in this status.':'No roles yet. Add your first brief.')+'</p></div>';return;}
+  list.innerHTML=filtered.map(r=>'<div class="role-card '+r.status+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px"><div><div style="font-family:Syne,sans-serif;font-size:15px;font-weight:700">'+r.company+'</div><div style="font-size:13px;color:var(--accent);font-weight:500;margin-top:2px">'+r.role+'</div></div><span class="bdg '+(SBDG[r.status]||'bdg-mut')+'">'+(SLBL[r.status]||r.status)+'</span></div>'+(r.notes?'<div style="font-size:12px;color:var(--muted);line-height:1.5;margin-top:4px">'+r.notes+'</div>':'')+'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted)">'+(r.salary?'<span>Salary <strong style="color:var(--ink)">'+r.salary+'</strong></span>':'')+(r.fee?'<span>Fee <strong style="color:var(--ink)">'+r.fee+'</strong></span>':'')+(r.contact?'<span>Contact <strong style="color:var(--ink)">'+r.contact+'</strong></span>':'')+'</div><div style="display:flex;gap:5px;margin-top:10px;flex-wrap:wrap"><button class="tact em" onclick="genRoleEmail(\''+r.company.replace(/'/g,"\\'")+'}\',\''+r.role.replace(/'/g,"\\'")+'\')">Draft email</button><button class="tact" onclick="openRoleModal('+r.id+')">Edit</button><button class="tact" onclick="addRoleTask('+r.id+')">Add to today</button></div></div>').join('');
+}
+async function genRoleEmail(company,role){const key=getKey();if(!key){alert('API key required.');return;}document.getElementById('gen-title').textContent='Email for '+company;document.getElementById('gen-modal-body').innerHTML='<div style="text-align:center;padding:28px;color:var(--muted)"><span class="spinner"></span> Writing...</div>';openModal('gen-ov');genEmailText='';try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:buildEmailPrompt(company,role,'you have an open '+role+' role')}]})});const data=await res.json();genEmailText=data.content?.[0]?.text||'';document.getElementById('gen-modal-body').innerHTML='<div class="gen-body">'+genEmailText.replace(/\n/g,'<br>')+'</div>';}catch(err){document.getElementById('gen-modal-body').innerHTML='<p style="color:var(--accent);font-size:12px">Error: '+err.message+'</p>';}}
+function addRoleTask(id){const r=state.roles.find(r=>r.id===id);state.tasks.push({id:state.nextId++,text:'Chase '+r.company+' re '+r.role,type:'chase',done:false,notes:r.contact||''});save();renderTasks();updateProgress();renderSugs();}
+
+// CANDIDATES
+function openCandModal(id){editingCandId=id||null;document.getElementById('cand-title').textContent=id?'Edit Candidate':'Add Candidate';document.getElementById('cand-del-btn').style.display=id?'block':'none';if(id){const c=state.candidates.find(c=>c.id===id);document.getElementById('c-name').value=c.name;document.getElementById('c-status').value=c.status;document.getElementById('c-role').value=c.role||'';document.getElementById('c-company').value=c.company||'';document.getElementById('c-spec').value=c.spec||'';document.getElementById('c-sen').value=c.sen||'';document.getElementById('c-loc').value=c.loc||'';document.getElementById('c-avail').value=c.avail||'';document.getElementById('c-sal').value=c.sal||'';document.getElementById('c-phone').value=c.phone||'';document.getElementById('c-skills').value=(c.skills||[]).join(', ');document.getElementById('c-notes').value=c.notes||'';}else{['c-name','c-role','c-company','c-loc','c-sal','c-phone','c-skills','c-notes'].forEach(i=>document.getElementById(i).value='');document.getElementById('c-status').value='Active';document.getElementById('c-spec').value='';document.getElementById('c-sen').value='';document.getElementById('c-avail').value='';}openModal('cand-ov');}
+function saveCandidate(){const name=document.getElementById('c-name').value.trim();if(!name){alert('Name is required.');return;}const skills=document.getElementById('c-skills').value.split(',').map(s=>s.trim()).filter(Boolean);const data={name,status:document.getElementById('c-status').value,role:document.getElementById('c-role').value.trim(),company:document.getElementById('c-company').value.trim(),spec:document.getElementById('c-spec').value,sen:document.getElementById('c-sen').value,loc:document.getElementById('c-loc').value.trim(),avail:document.getElementById('c-avail').value,sal:document.getElementById('c-sal').value.trim(),phone:document.getElementById('c-phone').value.trim(),skills,notes:document.getElementById('c-notes').value.trim(),rating:4};if(editingCandId){const idx=state.candidates.findIndex(c=>c.id===editingCandId);state.candidates[idx]={...state.candidates[idx],...data};}else{data.id=state.nextCandId++;state.candidates.unshift(data);}save();closeModal('cand-ov');renderCands();}
+function deleteCandidate(){if(!confirm('Remove this candidate?'))return;state.candidates=state.candidates.filter(c=>c.id!==editingCandId);save();closeModal('cand-ov');renderCands();}
+function setCandFilter(f,btn){candFilter=f;document.querySelectorAll('#cand-filters .cf').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderCands();}
+function renderCands(){
+  const q=(document.getElementById('cand-search').value||'').toLowerCase().trim();const grid=document.getElementById('cand-grid');
+  const filtered=state.candidates.filter(c=>{const sm=candFilter==='all'||c.status===candFilter;if(!sm)return false;if(!q)return true;return [c.name,c.role,c.company,c.spec,c.sen,c.loc,c.notes,c.status,...(c.skills||[])].join(' ').toLowerCase().includes(q);});
+  if(!filtered.length){grid.innerHTML='<div style="text-align:center;padding:48px 20px;color:var(--muted);font-size:13px;grid-column:1/-1"><div style="font-size:32px;margin-bottom:10px;opacity:.3">&#128269;</div><p>'+(q?'No results for "'+q+'"':state.candidates.length?'No candidates with this status.':'Add your first candidate above.')+'</p></div>';return;}
+  const spMap={'Active':'bdg-red','Passive':'bdg-gld','Placed':'bdg-grn','On hold':'bdg-mut'};
+  grid.innerHTML=filtered.map(c=>{const skills=(c.skills||[]).map(s=>'<span class="skill-pill'+(q&&s.toLowerCase().includes(q)?' match':'')+'">'+s+'</span>').join('');const stars='&#9733;'.repeat(c.rating||0)+'&#9734;'.repeat(5-(c.rating||0));return '<div class="cand-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:14px 16px 10px;border-bottom:1px solid var(--border)"><div><div class="cand-name">'+c.name+'</div><div class="cand-role">'+(c.role||'')+(c.company?' &middot; '+c.company:'')+'</div></div><span class="bdg '+(spMap[c.status]||'bdg-mut')+'">'+c.status+'</span></div><div style="padding:10px 16px 12px"><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">'+(c.spec?'<span class="bdg" style="background:#f0ebff;color:var(--purple)">'+c.spec+'</span>':'')+(c.sen?'<span class="bdg bdg-grn">'+c.sen+'</span>':'')+(c.loc?'<span class="bdg bdg-blue">'+c.loc+'</span>':'')+(c.sal?'<span class="bdg bdg-gld">$'+c.sal+'</span>':'')+'</div>'+(skills?'<div style="font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Skills</div><div>'+skills+'</div>':'')+(c.notes?'<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5">'+c.notes+'</div>':'')+'</div><div style="padding:8px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div style="font-size:11px;color:var(--muted)">Avail <strong style="color:var(--ink)">'+(c.avail||'TBC')+'</strong></div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:13px;color:var(--gold)">'+stars+'</span>'+(c.phone?'<button class="tact" onclick="window.location=\'tel:'+c.phone+'\'">'+c.phone+'</button>':'')+'<button class="tact" onclick="openCandModal('+c.id+')">Edit</button></div></div></div>';}).join('');
+}
+
+// STATS
+const STAT_DEFS=[{key:'calls',label:'Calls made',target:20,color:'var(--accent)'},{key:'emails',label:'Emails sent',target:30,color:'var(--blue)'},{key:'meetings',label:'Meetings booked',target:4,color:'var(--green)'},{key:'cvs',label:'CVs sent',target:10,color:'var(--gold)'},{key:'connections',label:'LinkedIn connects',target:25,color:'var(--purple)'},{key:'placements',label:'Placements',target:1,color:'var(--green)'}];
+function renderStats(){
+  document.getElementById('stats-grid').innerHTML=STAT_DEFS.map(s=>'<div class="stat-card"><div class="stat-n" style="color:'+s.color+'">'+(state.stats[s.key]||0)+'</div><div class="stat-l">'+s.label+'</div><div style="font-size:10px;color:var(--muted)">Target: '+s.target+'</div><div class="stat-btns"><button class="stat-btn minus" onclick="adjustStat(\''+s.key+'\',-1)">-</button><button class="stat-btn plus" onclick="adjustStat(\''+s.key+'\',1)">+</button></div></div>').join('');
+  document.getElementById('targets-section').innerHTML=STAT_DEFS.map(s=>{const v=state.stats[s.key]||0,pct=Math.min(Math.round((v/s.target)*100),100);return '<div class="wt-row"><span class="wt-label">'+s.label+'</span><div class="wt-bar-wrap"><div class="wt-bar'+(pct>=100?' done':'')+'" style="width:'+pct+'%;background:'+s.color+'"></div></div><span class="wt-pct">'+v+'/'+s.target+'</span></div>';}).join('');
+  const wins=document.getElementById('wins-list');if(!state.wins||!state.wins.length){wins.innerHTML='<p style="font-size:12px;color:var(--muted)">No wins logged yet. Add something you are proud of this week.</p>';return;}wins.innerHTML=state.wins.map((w,i)=>'<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:16px">&#127942;</span><div style="flex:1;font-size:13px;line-height:1.4">'+w+'</div><button onclick="removeWin('+i+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0;line-height:1">x</button></div>').join('');
+}
+function adjustStat(key,delta){state.stats[key]=Math.max(0,(state.stats[key]||0)+delta);save();renderStats();}
+function addWin(){const w=prompt('What was the win?');if(!w)return;if(!state.wins)state.wins=[];state.wins.unshift(w);save();renderStats();}
+function removeWin(i){state.wins.splice(i,1);save();renderStats();}
+
+// NOTES
+const notesArea=document.getElementById('notes-area');
+if(state.notes)notesArea.value=state.notes;
+notesArea.addEventListener('input',()=>{state.notes=notesArea.value;save();document.getElementById('notes-meta').textContent='Saved '+new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});});
+function saveNote(){const text=notesArea.value.trim();if(!text)return;if(!state.savedNotes)state.savedNotes=[];state.savedNotes.unshift({text,date:new Date().toLocaleString('en-AU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})});notesArea.value='';state.notes='';save();renderSavedNotes();}
+function renderSavedNotes(){const el=document.getElementById('saved-notes');if(!state.savedNotes||!state.savedNotes.length){el.innerHTML='<div class="empty-state"><div class="ei">&#128203;</div>No saved notes yet.</div>';return;}el.innerHTML=state.savedNotes.map((n,i)=>'<div class="note-chip"><div class="note-date">'+n.date+'</div><div style="font-size:12.5px;line-height:1.6;white-space:pre-line">'+n.text+'</div><button class="note-chip-del" onclick="deleteNote('+i+')">&#215;</button></div>').join('');}
+function deleteNote(i){state.savedNotes.splice(i,1);save();renderSavedNotes();}
+
+// EMAILS
+const emailDrafts=[
+  {label:"Alley Group",subject:"Following up",body:"Hi [Name],\n\nI hope you are well.\n\nJust following up on my note from last week. I know things get busy so no stress at all if the timing is off.\n\nI have a strong candidate in mind for your performance brief and wanted to make sure you had the chance to see them before they go to market. They have agency side experience across holding group and indie, which I think would suit what you are building.\n\nHappy to jump on a quick call whenever works. Even 10 minutes would be great.\n\nAlex Hamilton\nPrincipal Recruiter, Change Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au"},
+  {label:"Efficiency Leaders",subject:"Checking in",body:"Hi [Name],\n\nI hope you are well.\n\nI have been meaning to reach out. I work in digital media and ecommerce recruitment across Sydney and Melbourne and have been in the market for a while. I previously worked in house at WPP and Dentsu so I know the talent landscape well from both sides.\n\nI noticed Efficiency Leaders has been growing and thought it was worth a conversation about where your hiring sits at the moment. I work with a strong pipeline of performance and digital talent that does not always surface through job ads.\n\nHappy to connect whenever suits and always keen to grow my network.\n\nAlex Hamilton\nPrincipal Recruiter, Change Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au"},
+  {label:"Wired",subject:"Ecommerce role update",body:"Hi [Name],\n\nI hope you are well.\n\nJust wanted to check in on the ecommerce role and see how things are progressing your end. Happy to provide more detail on any of the candidates I sent across, or work through the brief further if the requirements have changed.\n\nAlways easier to move quickly on these briefs before the best people get snapped up elsewhere.\n\nLet me know whenever suits for a quick chat.\n\nAlex Hamilton\nPrincipal Recruiter, Change Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au"},
+  {label:"New client intro",subject:"[Company] recruitment introduction",body:"Hi [Name],\n\nI hope you are well.\n\nI specialise in recruiting across the digital media and performance space and have been in the market for a while. I previously worked in house at WPP and Dentsu looking after agencies like Carat, iProspect, Mindshare and Ikon, so I know the landscape well from both sides.\n\nI now recruit externally across agencies and client side and work with a strong pipeline of performance, digital and commercial talent across Sydney and Melbourne.\n\nI noticed [trigger] and thought it was worth reaching out. I would love to find out what your hiring looks like over the next few months.\n\nRegardless, always keen to connect and grow my network.\n\nAlex Hamilton\nPrincipal Recruiter, Change Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au"},
+  {label:"Speculative candidate",subject:"Strong candidate for your team",body:"Hi [Name],\n\nI hope you are well.\n\nI am Alex and I specialise in recruiting digital, ecommerce and performance talent across Australia.\n\nI am currently working with a strong candidate who has [brief description] and is open to their next move. They specifically mentioned [Company] as somewhere they would love to have a conversation.\n\nI thought it was worth reaching out before taking them to market more broadly. Happy to share more detail if it is useful.\n\nWould a quick call work?\n\nAlex Hamilton\nPrincipal Recruiter, Change Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au"},
+  {label:"Follow up",subject:"Following up",body:"Hi [Name],\n\nJust following up on my note from [date]. Completely understand if the timing is not right.\n\nIf hiring is on the horizon at all I would rather have a conversation before you have an urgent gap to fill. Happy to connect whenever suits.\n\nAlex Hamilton\nPrincipal Recruiter, Change Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au"},
+];
+function renderMainEmails(){document.getElementById('main-email-tabs').innerHTML=emailDrafts.map((e,i)=>'<div class="etab'+(i===mainEmailTab?' active':'')+'" onclick="switchMainEmail('+i+')">'+e.label+'</div>').join('');document.getElementById('main-email-panels').innerHTML=emailDrafts.map((e,i)=>'<div class="econtent'+(i===mainEmailTab?' active':'')+'"><div class="eslbl">Subject</div><div class="esubj">'+e.subject+'</div><div class="ebody">'+e.body+'</div><button class="copy-btn" id="meb-'+i+'" onclick="copyMainEmail('+i+')">Copy email</button></div>').join('');}
+function switchMainEmail(i){mainEmailTab=i;renderMainEmails();}
+function copyMainEmail(i){const e=emailDrafts[i],text='Subject: '+e.subject+'\n\n'+e.body;navigator.clipboard.writeText(text).catch(()=>{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});const btn=document.getElementById('meb-'+i);btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy email';btn.classList.remove('copied');},2000);}
+function jumpEmail(i){mainEmailTab=i;document.querySelectorAll('.ntab')[5].click();setTimeout(()=>renderMainEmails(),50);}
+async function genEmailFromPage(){const company=document.getElementById('gen-company').value.trim();const trigger=document.getElementById('gen-trigger').value.trim();if(!company){alert('Please enter a company name.');return;}const key=getKey();if(!key){alert('API key required. Save it in the Today tab.');return;}document.getElementById('gen-result').style.display='none';document.getElementById('gen-body-text').innerHTML='<span class="spinner"></span> Writing...';document.getElementById('gen-result').style.display='block';genPageEmailText='';try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:buildEmailPrompt(company,trigger||'your team',trigger||'I wanted to reach out')}]})});const data=await res.json();genPageEmailText=data.content?.[0]?.text||'';document.getElementById('gen-body-text').innerHTML=genPageEmailText.replace(/\n/g,'<br>');}catch(err){document.getElementById('gen-body-text').innerHTML='<span style="color:var(--accent)">Error: '+err.message+'</span>';}}
+function copyGenPage(){if(!genPageEmailText)return;navigator.clipboard.writeText(genPageEmailText).catch(()=>{const ta=document.createElement('textarea');ta.value=genPageEmailText;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});const btn=document.getElementById('gen-copy-page');btn.textContent='Copied!';btn.style.background='var(--green)';setTimeout(()=>{btn.textContent='Copy email';btn.style.background=''},2000);}
+
+// SUGGESTIONS
+const SUGS=[{icon:"&#128222;",text:"Call Alley Group re Head of Performance",sub:"Last chased 10+ days ago",type:"chase"},{icon:"&#128231;",text:"Email Efficiency Leaders intro",sub:"No contact made yet",type:"chase"},{icon:"&#128172;",text:"LinkedIn message to Nunn Media TA team",sub:"Top indie agency, always hiring",type:"bd"},{icon:"&#128269;",text:"Find 2 new Performance SEM candidates",sub:"Active pipeline gap in Sydney",type:"candidate"},{icon:"&#128203;",text:"Update BD Tracker with last week contacts",sub:"Keep pipeline current",type:"admin"},{icon:"&#128188;",text:"Send speculative candidate to Cartology",sub:"Retail media, always relevant",type:"bd"},{icon:"&#129309;",text:"Send 5 LinkedIn connection requests",sub:"Indie media agency contacts",type:"bd"},{icon:"&#128222;",text:"Call placed candidate for 3 month check in",sub:"Rebuild pipeline from placements",type:"candidate"},{icon:"&#128202;",text:"Log this week\'s wins in Weekly Stats",sub:"Keep track of momentum",type:"admin"}];
+function renderSugs(){const existing=state.tasks.map(t=>t.text.toLowerCase());const avail=SUGS.filter(s=>!existing.some(e=>e.includes(s.text.toLowerCase().slice(0,14)))).slice(0,5);document.getElementById('sug-list').innerHTML=avail.map(s=>'<div class="sug-item"><span class="sug-icon">'+s.icon+'</span><div><div class="sug-text">'+s.text+'</div><div class="sug-sub">'+s.sub+'</div></div><button class="sug-add" onclick="addSug(\''+s.text.replace(/'/g,"\\'")+'\',\''+s.type+'\')">Add</button></div>').join('');}
+function addSug(text,type){state.tasks.push({id:state.nextId++,text,type,done:false,notes:''});save();renderTasks();renderSugs();updateProgress();}
+
+// ── HOISTED VARS ──
+var expandedRows = {};
+var bdEditingId = null;
+var mapFilter = 'all';
+var mapSearchQ = '';
+
+
+// ── JOB SIGNALS ──────────────────────────────────────────────
+
+const SEEK_SEARCHES = [
+  { title: 'Performance Manager / Director', query: 'performance+marketing+manager+OR+performance+director', days: 7 },
+  { title: 'Digital Marketing Manager / Director', query: 'digital+marketing+manager+OR+digital+director', days: 7 },
+  { title: 'Programmatic / Trading Manager', query: 'programmatic+manager+OR+trading+manager', days: 7 },
+  { title: 'Retail Media Manager / Director', query: 'retail+media+manager+OR+retail+media+director', days: 14 },
+  { title: 'SEO Manager', query: 'SEO+manager+OR+SEO+director', days: 7 },
+  { title: 'Ecommerce Manager / Director', query: 'ecommerce+manager+OR+ecommerce+director', days: 7 },
+  { title: 'CRM / Data Marketing Manager', query: 'CRM+manager+OR+data+marketing+manager', days: 14 },
+  { title: 'Head of Performance / Digital', query: 'head+of+performance+OR+head+of+digital', days: 14 },
+  { title: 'Performance Marketing Manager Agency', query: 'performance+marketing+manager+agency', days: 7 },
+  { title: 'Digital Media Manager', query: 'digital+media+manager+OR+digital+media+director', days: 7 },
+];
+
+const LI_SEARCHES = [
+  {
+    title: 'Performance Marketing Manager — Sydney',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=performance+marketing+manager&location=Sydney%2C+Australia&f_TPR=r604800',
+    sub: 'Last 7 days • Sydney'
+  },
+  {
+    title: 'Performance Marketing Manager — Melbourne',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=performance+marketing+manager&location=Melbourne%2C+Australia&f_TPR=r604800',
+    sub: 'Last 7 days • Melbourne'
+  },
+  {
+    title: 'Digital Marketing Director — Australia',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=digital+marketing+director&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • All Australia'
+  },
+  {
+    title: 'Programmatic Manager — Australia',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=programmatic+manager&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • All Australia'
+  },
+  {
+    title: 'Retail Media Manager — Australia',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=retail+media+manager&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • All Australia'
+  },
+  {
+    title: 'Head of Performance — Australia',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=head+of+performance&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • All Australia'
+  },
+  {
+    title: 'Ecommerce Manager — Australia',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=ecommerce+manager&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • All Australia'
+  },
+  {
+    title: 'SEO Manager — Australia',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=SEO+manager&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • All Australia'
+  },
+  {
+    title: 'CRM Manager — Australia',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=CRM+manager&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • All Australia'
+  },
+  {
+    title: 'Performance Marketing Manager — Agency',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=performance+marketing+manager+agency&location=Australia&f_TPR=r604800',
+    sub: 'Last 7 days • Agency roles'
+  },
+];
+
+const QUICK_ACTIONS = [
+  {
+    icon: '&#128222;',
+    text: 'Seek: All digital media & performance jobs today',
+    url: 'https://www.seek.com.au/jobs?keywords=digital+media+performance+marketing&daterange=1&sortmode=ListedDate'
+  },
+  {
+    icon: '&#128101;',
+    text: 'LinkedIn: New connections this week in digital media',
+    url: 'https://www.linkedin.com/search/results/people/?keywords=digital+media+marketing&network=%5B%22F%22%5D&origin=FACETED_SEARCH'
+  },
+  {
+    icon: '&#128240;',
+    text: 'Seek: All marketing director roles posted today',
+    url: 'https://www.seek.com.au/jobs?keywords=marketing+director&daterange=1&sortmode=ListedDate'
+  },
+  {
+    icon: '&#128202;',
+    text: 'Seek: Head of Performance roles — last 7 days',
+    url: 'https://www.seek.com.au/jobs?keywords=head+of+performance&daterange=7&sortmode=ListedDate'
+  },
+];
+
+let seekResults = {};
+
+function renderSignalsPage() {
+  // ── Seek quick-launch grid
+  var seekContainer = document.getElementById('seek-feeds-container');
+  if (seekContainer) {
+    seekContainer.innerHTML = SEEK_SEARCHES.map(function(s) {
+      var url = 'https://www.seek.com.au/jobs?keywords=' + s.query + '&daterange=' + s.days + '&sortmode=ListedDate&where=All+Australia';
+      return '<a href="' + url + '" target="_blank" rel="noopener" class="signal-seek-card">' +
+        '<div class="signal-seek-title">&#128269; ' + s.title + '</div>' +
+        '<div class="signal-seek-meta">Seek • last ' + s.days + ' days • All Australia • newest first</div>' +
+        '<div class="signal-seek-cta">Open live search &#8594;</div>' +
+        '</a>';
+    }).join('');
+  }
+  // ── LinkedIn searches
+  var liContainer = document.getElementById('li-searches-container');
+  if (liContainer) {
+    liContainer.innerHTML = LI_SEARCHES.map(function(s) {
+      return '<a class="li-btn" href="' + s.url + '" target="_blank" rel="noopener">' +
+        '<div class="li-btn-title">&#128101; ' + s.title + '</div>' +
+        '<div class="li-btn-sub">' + s.sub + ' • sorted by date</div>' +
+        '</a>';
+    }).join('');
+  }
+  // ── Quick actions
+  var qaContainer = document.getElementById('quick-actions');
+  if (qaContainer) {
+    qaContainer.innerHTML = QUICK_ACTIONS.map(function(a) {
+      return '<a class="li-btn" href="' + a.url + '" target="_blank" rel="noopener">' +
+        '<div class="li-btn-title">' + a.icon + ' ' + a.text + '</div>' +
+        '</a>';
+    }).join('');
+  }
+}
+
+function loadSeekFeed(idx) { renderSignalsPage(); }
+
+function addCompanyFromSignal(company) {
+  if (!company) return;
+  // Add to both market map and BD tracker
+  if (!state.customMapCompanies) state.customMapCompanies = [];
+  if (!state.bdCompanies) state.bdCompanies = [];
+  
+  // Determine best sector based on company name (basic heuristic)
+  var sector = 'Digital Media';
+  
+  // Add to map if not already there
+  if (!state.customMapCompanies.find(function(c) { return c.name.toLowerCase() === company.toLowerCase(); })) {
+    state.customMapCompanies.push({name: company, sector: sector, priority: 'warm'});
+  }
+  // Add to BD tracker if not already there  
+  var existing = state.bdCompanies.find(function(c) { return c.name.toLowerCase() === company.toLowerCase(); });
+  if (!existing || existing.deleted) {
+    if (existing) { existing.deleted = false; }
+    else {
+      state.bdCompanies.push({
+        id: Date.now(), name: company, sector: sector,
+        status: 'Not contacted', priority: 'warm',
+        notes: 'Added from Seek job signal', contact: '',
+        followup: '', dateAdded: todayStr, deleted: false
+      });
+    }
+  }
+  save();
+  showToast(company + ' added to Market Map and BD Tracker');
+  // Re-render the current feed
+  var allFeeds = document.querySelectorAll('[id^="seek-feed-body-"]');
+  allFeeds.forEach(function(el) {
+    var idx = parseInt(el.id.replace('seek-feed-body-',''));
+    if (seekResults[idx]) {
+      loadSeekFeed(idx);
+    }
+  });
+}
+
+function refreshAllFeeds() {
+  SEEK_FEEDS.forEach((f, i) => loadSeekFeed(i));
+}
+
+function updateSignalStats() {
+  var total = Object.values(seekResults).reduce((sum, items) => sum + items.length, 0);
+  var totalEl = document.getElementById('sig-total');
+  if (totalEl) totalEl.textContent = total;
+  var lastEl = document.getElementById('sig-last-checked');
+  if (lastEl) lastEl.textContent = 'Last checked: ' + new Date().toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit'});
+}
+
+
+
+// ── SIGNAL CTA FUNCTIONS ─────────────────────────────────────
+
+function logCallFromSignal(company, jobTitle) {
+  // Add to BD tracker with a call logged
+  if (!state.bdCompanies) state.bdCompanies = [];
+  var existing = state.bdCompanies.find(function(c) { return !c.deleted && c.name.toLowerCase() === company.toLowerCase(); });
+  if (!existing) {
+    state.bdCompanies.push({
+      id: Date.now(), name: company, sector: 'Digital Media',
+      status: 'Called', priority: 'warm',
+      notes: 'Job signal: ' + jobTitle,
+      contact: '', followup: '', dateAdded: todayStr, deleted: false,
+      activityLog: [{date: todayStr, type: 'Call', note: 'Called re: ' + jobTitle}]
+    });
+  } else {
+    if (!existing.activityLog) existing.activityLog = [];
+    existing.activityLog.push({date: todayStr, type: 'Call', note: 'Called re: ' + jobTitle});
+    existing.status = 'Called';
+  }
+  save();
+  showToast('Call logged for ' + company + ' in BD Tracker');
+}
+
+function draftEmailFromSignal(company, jobTitle) {
+  var subject = 'Recruitment Partnership Enquiry';
+  var body = 'Hi [Name],\n\nI hope this finds you well.\n\nI noticed you are looking for a ' + jobTitle + ' and wanted to reach out.\n\nMy name is Alex Hamilton and I am a Principal Recruiter at Change Recruitment, specialising in digital media, performance marketing and ecommerce. I have worked across the WPP and Dentsu networks and have a strong pool of digital marketing talent across Sydney and Melbourne.\n\nI would love to have a quick chat about how we can support your search. I have a number of strong candidates who could be a great fit for this type of role and I am confident we can move quickly.\n\nWould you be open to a brief call this week?\n\nLooking forward to connecting.\n\nAlex Hamilton\nPrincipal Recruiter\nChange Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au';
+  openEmailModal('BD Outreach: ' + company, subject, body, company);
+}
+
+function draftFloatFromSignal(company, jobTitle) {
+  var subject = 'Strong Candidate for Your ' + jobTitle + ' Role';
+  var body = 'Hi [Name],\n\nI hope you are having a great week.\n\nI saw you are searching for a ' + jobTitle + ' and I wanted to reach out as I have a candidate who could be a strong fit.\n\nWithout going into full detail just yet, they have a solid background in ' + jobTitle.toLowerCase().replace('manager','management').replace('director','leadership') + ' from a well regarded agency environment, and they are actively exploring their next move.\n\nI would love to tell you more about them. Would you be open to a quick call this week? I promise it will be worth 10 minutes of your time.\n\nLooking forward to speaking.\n\nAlex Hamilton\nPrincipal Recruiter\nChange Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au';
+  openEmailModal('Float Candidate: ' + company, subject, body, company);
+}
+
+function openEmailModal(title, subject, body, company) {
+  // Remove existing modal if any
+  var existing = document.getElementById('email-modal-overlay');
+  if (existing) existing.remove();
+
+  var overlay = document.createElement('div');
+  overlay.className = 'email-modal-overlay';
+  overlay.id = 'email-modal-overlay';
+  overlay.innerHTML = 
+    '<div class="email-modal">' +
+      '<div class="email-modal-hdr">' +
+        '<span class="email-modal-title">&#9993; ' + title + '</span>' +
+        '<button class="email-close-btn" onclick="document.getElementById(\'email-modal-overlay\').remove()">&#10005;</button>' +
+      '</div>' +
+      '<div class="email-modal-body">' +
+        '<div class="email-field"><label>To</label><input type="text" id="em-to" placeholder="[Name] at ' + company + '" value=""></div>' +
+        '<div class="email-field"><label>Subject</label><input type="text" id="em-subject" value="' + subject.replace(/"/g,'&quot;') + '"></div>' +
+        '<div class="email-field"><label>Body</label><textarea id="em-body">' + body + '</textarea></div>' +
+        '<p style="font-size:11px;color:var(--muted);margin-top:4px">Edit the email above then copy it to paste into Outlook. Replace [Name] with the contact name.</p>' +
+      '</div>' +
+      '<div class="email-modal-footer">' +
+        '<button class="email-close-btn" onclick="document.getElementById(\'email-modal-overlay\').remove()">Cancel</button>' +
+        '<button class="email-copy-btn" onclick="copyEmailToClipboard()">&#128203; Copy to clipboard</button>' +
+        '<a class="email-outlook-btn" id="em-mailto-link" href="#" onclick="openInOutlook();return false;">&#128140; Open in Outlook</a>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+}
+
+function copyEmailToClipboard() {
+  var subject = document.getElementById('em-subject').value;
+  var body = document.getElementById('em-body').value;
+  var to = document.getElementById('em-to').value;
+  var full = (to ? 'To: ' + to + '\n' : '') + 'Subject: ' + subject + '\n\n' + body;
+  navigator.clipboard.writeText(full).then(function() {
+    showToast('Email copied to clipboard');
+  }).catch(function() {
+    // Fallback
+    var ta = document.createElement('textarea');
+    ta.value = full;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Email copied to clipboard');
+  });
+}
+
+function openInOutlook() {
+  var subject = encodeURIComponent(document.getElementById('em-subject').value);
+  var body = encodeURIComponent(document.getElementById('em-body').value);
+  var to = encodeURIComponent(document.getElementById('em-to').value || '');
+  window.open('mailto:' + to + '?subject=' + subject + '&body=' + body, '_blank');
+}
+
+
+
+
+// ── SMART DAILY BRIEFING ─────────────────────────────────────
+
+var briefingDoneIds = {};
+
+function getGreeting() {
+  var h = new Date().getHours();
+  if (h < 12) return 'Good morning, Alex.';
+  if (h < 17) return 'Good afternoon, Alex.';
+  return 'Good evening, Alex.';
+}
+
+function getBriefingSub(items) {
+  var urgent = items.filter(function(i){return i.priority==='urgent';}).length;
+  var total = items.length;
+  if (total === 0) return 'You are all caught up. Nothing urgent today.';
+  if (urgent > 0) return 'You have ' + urgent + ' urgent follow-up' + (urgent>1?'s':'') + ' and ' + total + ' actions waiting. Let\'s clear them.';
+  return 'You have ' + total + ' follow-up action' + (total>1?'s':'') + ' today. Start with the first one.';
+}
+
+// Smart email templates that learn your language patterns
+function getSmartEmail(type, name, context, status) {
+  var firstName = name ? name.split(' ')[0] : 'there';
+  var templates = {
+    'bd_first_contact': [
+      'Hi [Name],\n\nHope you are having a good week.\n\nI am Alex Hamilton, Principal Recruiter at Change Recruitment. We specialise in digital media and performance marketing and I have been building a strong network across agencies and brand-side businesses in Sydney and Melbourne.\n\nI have some talented people across performance, programmatic, ecommerce and retail media who might be worth knowing about. Would love to have a quick chat when you have 10 minutes.\n\nAlex Hamilton\nPrincipal Recruiter\nChange Recruitment\nm. 0405 140 138\nwww.changerecruitment.com.au',
+    ],
+    'bd_followup_called': [
+      'Hi [Name],\n\nJust following up on our recent chat.\n\nWanted to check in and see whether anything has changed on the team front. I have a few strong people I am currently working with who could be worth a conversation.\n\nHappy to jump on a quick call if useful.\n\nAlex\nChange Recruitment\nm. 0405 140 138',
+    ],
+    'bd_followup_met': [
+      'Hi [Name],\n\nGreat speaking the other day.\n\nI wanted to stay on your radar as I continue to see some strong talent coming through. I will keep you posted as anything relevant comes up.\n\nIn the meantime let me know if anything changes on your end.\n\nAlex\nChange Recruitment\nm. 0405 140 138',
+    ],
+    'bd_followup_briefed': [
+      'Hi [Name],\n\nI wanted to give you a quick progress update on the search.\n\nI have been working through my network and have some strong candidates I am keen to present. Can we find 30 minutes this week to walk through the shortlist?\n\nAlex\nChange Recruitment\nm. 0405 140 138',
+    ],
+    'bd_followup_proposal': [
+      'Hi [Name],\n\nI just wanted to follow up on the proposal I sent across.\n\nHappy to talk through any questions or adjust anything that needs tweaking. What are your thoughts?\n\nAlex\nChange Recruitment\nm. 0405 140 138',
+    ],
+    'candidate_active': [
+      'Hi ' + firstName + ',\n\nHope you are well.\n\nJust checking in to see how things are going. The market is pretty active at the moment and I have a few conversations worth telling you about.\n\nAre you free for a quick call this week?\n\nAlex\nChange Recruitment\nm. 0405 140 138',
+    ],
+    'candidate_passive': [
+      'Hi ' + firstName + ',\n\nIt has been a little while so I wanted to touch base.\n\nNo pressure at all but wanted to stay connected and keep you across what is moving in the market. Happy to chat whenever it suits.\n\nAlex\nChange Recruitment\nm. 0405 140 138',
+    ],
+    'candidate_placed': [
+      'Hi ' + firstName + ',\n\nHope the new role is going well.\n\nJust wanted to check in and see how you are settling in. Always good to stay in touch.\n\nAlex\nChange Recruitment\nm. 0405 140 138',
+    ],
+  };
+  
+  var key = type;
+  var options = templates[key] || templates['bd_first_contact'];
+  return options[0].replace('[Name]', firstName);
+}
+
+function generateBriefingItems() {
+  var items = [];
+  var now = new Date();
+  var hour = now.getHours();
+
+  // ── 1. BD Companies overdue ──────────────────────────────
+  (state.bdCompanies || []).forEach(function(c) {
+    if (c.deleted) return;
+    var lastDate = null;
+    if (c.activityLog && c.activityLog.length > 0) {
+      var sorted = c.activityLog.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+      lastDate = sorted[0].date;
+    } else {
+      lastDate = c.dateAdded;
+    }
+    var days = daysSince(lastDate);
+    var status = (c.status||'').toLowerCase();
+    
+    var threshold = 7;
+    if (status==='not contacted') threshold=10;
+    else if (status==='called') threshold=5;
+    else if (status==='met'||status==='briefed') threshold=4;
+    else if (status==='proposal sent') threshold=2;
+    
+    if (days < threshold) return;
+    
+    var priority = days >= threshold*2 ? 'urgent' : days >= threshold ? 'high' : 'normal';
+    var emailType = 'bd_first_contact';
+    if (status==='called') emailType='bd_followup_called';
+    else if (status==='met') emailType='bd_followup_met';
+    else if (status==='briefed') emailType='bd_followup_briefed';
+    else if (status==='proposal sent') emailType='bd_followup_proposal';
+    
+    var action = '';
+    if (status==='not contacted') action='First contact — introduce yourself and open the conversation.';
+    else if (status==='called') action='You called ' + days + ' days ago. Follow up with a quick email or another call.';
+    else if (status==='met') action='You met ' + days + ' days ago. Check in and stay front of mind.';
+    else if (status==='briefed') action='Briefed ' + days + ' days ago. Give a progress update.';
+    else if (status==='proposal sent') action='Proposal sent ' + days + ' days ago. Chase this today.';
+    else action='Last activity ' + days + ' days ago. Time to reconnect.';
+
+    items.push({
+      id: 'bd_' + c.id,
+      coId: c.id,
+      type: 'bd',
+      name: c.name,
+      priority: priority,
+      title: (priority==='urgent'?'&#128680; ':'') + c.name,
+      why: action,
+      days: days,
+      emailType: emailType,
+      emailBody: getSmartEmail(emailType, c.name, c, status),
+      emailSubject: status==='not contacted' ? 'Digital Marketing Recruitment' : status==='briefed' ? 'Update on your search' : status==='proposal sent' ? 'Following up on our proposal' : 'Checking in'
+    });
+  });
+
+  // ── 2. Candidates needing contact ───────────────────────
+  (state.candidates || []).forEach(function(c) {
+    if (c.deleted) return;
+    var days = daysSince(c.lastContact || c.dateAdded);
+    var candStatus = (c.status||'').toLowerCase();
+    var threshold = candStatus==='active' ? 7 : candStatus==='placed' ? 60 : 21;
+    if (days < threshold) return;
+    
+    var emailType = candStatus==='active' ? 'candidate_active' : candStatus==='placed' ? 'candidate_placed' : 'candidate_passive';
+    var priority = days >= threshold*2 ? 'urgent' : 'high';
+    var why = candStatus==='active' ? 'Active candidate not contacted for ' + days + ' days. They need to know you are working for them.' 
+             : candStatus==='placed' ? 'Placed ' + days + ' days ago. Check in and protect the relationship.'
+             : 'Candidate not contacted for ' + days + ' days. Stay front of mind.';
+
+    items.push({
+      id: 'cand_' + c.id,
+      coId: c.id,
+      type: 'candidate',
+      name: c.name,
+      priority: priority,
+      title: '&#128100; ' + c.name + (c.role ? ' — ' + c.role : ''),
+      why: why,
+      days: days,
+      emailType: emailType,
+      emailBody: getSmartEmail(emailType, c.name, c, candStatus),
+      emailSubject: 'Checking in'
+    });
+  });
+
+  // ── 3. Roles with no update in 7+ days ──────────────────
+  (state.roles || []).forEach(function(r) {
+    if (!r || r.deleted || r.status==='Closed') return;
+    var days = daysSince(r.dateAdded);
+    if (days >= 7) {
+      items.push({
+        id: 'role_' + r.id,
+        type: 'role',
+        name: r.title + (r.company ? ' at ' + r.company : ''),
+        priority: days >= 14 ? 'urgent' : 'high',
+        title: '&#128203; ' + r.title + (r.company ? ' @ ' + r.company : ''),
+        why: 'Role open for ' + days + ' days with no logged update. Update the status or follow up with the client.',
+        days: days,
+        emailBody: null
+      });
+    }
+  });
+
+  // Sort by priority then days
+  var pOrder = {urgent:0, high:1, normal:2};
+  items.sort(function(a,b){
+    if (pOrder[a.priority]!==pOrder[b.priority]) return pOrder[a.priority]-pOrder[b.priority];
+    return b.days - a.days;
+  });
+
+  return items.slice(0, 8);
+}
+
+function renderFollowUps() { renderDailyBriefing(); } // alias
+
+function renderDailyBriefing() {
+  var greetEl = document.getElementById('briefing-greeting');
+  var subEl = document.getElementById('briefing-sub');
+  var tasksEl = document.getElementById('briefing-tasks');
+  var doneEl = document.getElementById('briefing-done-count');
+  var totalEl = document.getElementById('briefing-total-count');
+  if (!tasksEl) return;
+
+  if (greetEl) greetEl.textContent = getGreeting();
+
+  var items = generateBriefingItems();
+  if (totalEl) totalEl.textContent = items.length;
+
+  var doneCount = Object.keys(briefingDoneIds).filter(function(k){return briefingDoneIds[k];}).length;
+  if (doneEl) doneEl.textContent = doneCount;
+
+  if (subEl) subEl.textContent = getBriefingSub(items.filter(function(i){return !briefingDoneIds[i.id];}));
+
+  if (items.length === 0) {
+    tasksEl.innerHTML = '<div style="padding:10px 0;font-size:12px;color:#aaa">&#10003; Nothing urgent. Great start to the day.</div>';
+    return;
+  }
+
+  tasksEl.innerHTML = items.map(function(item) {
+    var isDone = !!briefingDoneIds[item.id];
+    var pClass = item.priority==='urgent' ? 'bt-p-urgent' : item.priority==='high' ? 'bt-p-high' : 'bt-p-normal';
+    var safeId = item.id.replace(/[^a-zA-Z0-9_]/g,'_');
+    
+    return '<div class="bt-item' + (isDone?' bt-done':'') + '" id="bt-' + safeId + '">' +
+      '<div class="bt-priority ' + pClass + '"></div>' +
+      '<div class="bt-check' + (isDone?' checked':'') + '" onclick="markBriefingDone(\'' + item.id + '\')">' + (isDone?'&#10003;':'') + '</div>' +
+      '<div class="bt-text">' +
+        '<div class="bt-title">' + item.title + '</div>' +
+        '<div class="bt-why">' + item.why + '</div>' +
+        (!isDone ? '<div class="bt-actions">' +
+          '<button class="bt-btn bt-call" onclick="quickBriefingCall(\'' + item.id + '\')">&#128222; Log call</button>' +
+          (item.emailBody ? '<button class="bt-btn bt-email" onclick="quickBriefingEmail(\'' + item.id + '\')">&#9993; Draft email</button>' : '') +
+          '<button class="bt-btn bt-snooze" onclick="snoozeBriefingItem(\'' + item.id + '\')">&#128337; Snooze 3d</button>' +
+          '<button class="bt-btn bt-done-btn" onclick="markBriefingDone(\'' + item.id + '\')">&#10003; Done</button>' +
+        '</div>' : '') +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Store items for action functions
+  window._briefingItems = items;
+}
+
+function regenerateBriefing() { renderDailyBriefing(); }
+
+function markBriefingDone(id) {
+  briefingDoneIds[id] = true;
+  renderDailyBriefing();
+  showToast('Marked as done');
+}
+
+function quickBriefingCall(id) {
+  var item = (window._briefingItems||[]).find(function(i){return i.id===id;});
+  if (!item) return;
+  if (item.type==='bd') {
+    var co = (state.bdCompanies||[]).find(function(c){return c.id===item.coId;});
+    if (co) {
+      if (!co.activityLog) co.activityLog = [];
+      co.activityLog.push({date:todayStr, type:'Call', note:'Call logged from daily briefing'});
+      co.status = 'Called';
+      save();
+    }
+  } else if (item.type==='candidate') {
+    var ca = (state.candidates||[]).find(function(c){return c.id===item.coId;});
+    if (ca) { ca.lastContact = todayStr; save(); }
+  }
+  briefingDoneIds[id] = true;
+  renderDailyBriefing();
+  showToast('Call logged for ' + item.name);
+}
+
+function quickBriefingEmail(id) {
+  var item = (window._briefingItems||[]).find(function(i){return i.id===id;});
+  if (!item || !item.emailBody) return;
+  openEmailModal('Follow-up: ' + item.name, item.emailSubject, item.emailBody, item.name);
+}
+
+function snoozeBriefingItem(id) {
+  var item = (window._briefingItems||[]).find(function(i){return i.id===id;});
+  if (!item) return;
+  if (item.type==='bd') {
+    var co = (state.bdCompanies||[]).find(function(c){return c.id===item.coId;});
+    if (co) {
+      if (!co.activityLog) co.activityLog=[];
+      co.activityLog.push({date:todayStr, type:'Note', note:'Snoozed 3 days from briefing'});
+      save();
+    }
+  } else if (item.type==='candidate') {
+    var ca = (state.candidates||[]).find(function(c){return c.id===item.coId;});
+    if (ca) { ca.lastContact = todayStr; save(); }
+  }
+  briefingDoneIds[id] = true;
+  renderDailyBriefing();
+  showToast('Snoozed for 3 days');
+}
+
+// Add briefing items automatically to task list
+function addBriefingToTasks() {
+  var items = generateBriefingItems();
+  if (!items || items.length === 0) return;
+  // Only add tasks that are not already in the list
+  var urgent = items.filter(function(i){return i.priority==='urgent';}).slice(0,3);
+  urgent.forEach(function(item) {
+    var exists = (state.tasks||[]).some(function(t){return t.text && t.text.includes(item.name);});
+    if (!exists) {
+      if (!state.tasks) state.tasks=[];
+      state.tasks.push({
+        id: Date.now() + Math.random(),
+        text: 'Follow up: ' + item.name,
+        type: 'call',
+        done: false,
+        notes: item.why,
+        auto: true
+      });
+    }
+  });
+  save();
+}
+
+
+// ── CV UPLOAD & PARSING ───────────────────────────────────
+
+function initCVUpload() {
+  var zone = document.getElementById('cv-drop-zone');
+  if (!zone || zone._cvInit) return;
+  zone._cvInit = true;
+  zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', function() { zone.classList.remove('dragover'); });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault(); zone.classList.remove('dragover');
+    var file = e.dataTransfer.files[0];
+    if (file) handleCVUpload(file);
+  });
+}
+
+function handleCVUpload(file) {
+  if (!file) return;
+  var apiKey = state.apiKey || '';
+  if (!apiKey) { showToast('Please add your Anthropic API key in the Today tab first'); return; }
+  var ext = file.name.toLowerCase().split('.').pop();
+  if (!['pdf','doc','docx'].includes(ext)) { showToast('Please upload a PDF or Word document'); return; }
+
+  var proc = document.getElementById('cv-processing');
+  var statusEl = document.getElementById('cv-processing-status');
+  var resultContainer = document.getElementById('cv-result-container');
+  if (proc) proc.classList.add('visible');
+  if (statusEl) statusEl.textContent = 'Reading ' + file.name + '...';
+  if (resultContainer) resultContainer.innerHTML = '';
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var base64 = e.target.result.split(',')[1];
+    var mediaType = ext === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    if (statusEl) statusEl.textContent = 'Extracting details with Claude...';
+
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'document', source: { type: 'base64', media_type: mediaType, data: base64 } },
+            { type: 'text', text: 'Extract candidate info from this CV. Return ONLY raw JSON, no markdown, no explanation:\n{"name":"full name","email":"email or empty","phone":"phone or empty","currentRole":"job title","currentCompany":"employer","location":"city","skills":"top 5 skills comma separated","salary":"salary as number only e.g. 120000 or empty","status":"Active","notes":"2 sentence background summary"}' }
+          ]
+        }]
+      })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (proc) proc.classList.remove('visible');
+      if (data.error) { showToast('API error: ' + data.error.message); return; }
+      var text = (data.content && data.content[0] ? data.content[0].text : '').replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+      try { showCVResult(JSON.parse(text)); }
+      catch(e) { showToast('Could not read CV. Try a different file.'); }
+    })
+    .catch(function() { if (proc) proc.classList.remove('visible'); showToast('Error reading CV. Check your API key.'); });
+  };
+  reader.readAsDataURL(file);
+}
+
+function showCVResult(c) {
+  var container = document.getElementById('cv-result-container');
+  if (!container) return;
+  container.innerHTML =
+    '<div class="cv-result">' +
+    '<div class="cv-result-name">' + cvEsc(c.name||'Unknown') + '</div>' +
+    '<div class="cv-result-role">' + cvEsc(c.currentRole||'') + (c.currentCompany?' at '+cvEsc(c.currentCompany):'') + '</div>' +
+    '<div class="cv-result-fields">' +
+    '<div class="cv-field"><label>Full Name</label><input id="cvr-name" value="' + cvEsc(c.name||'') + '"></div>' +
+    '<div class="cv-field"><label>Current Role</label><input id="cvr-role" value="' + cvEsc(c.currentRole||'') + '"></div>' +
+    '<div class="cv-field"><label>Company</label><input id="cvr-company" value="' + cvEsc(c.currentCompany||'') + '"></div>' +
+    '<div class="cv-field"><label>Location</label><input id="cvr-location" value="' + cvEsc(c.location||'Sydney') + '"></div>' +
+    '<div class="cv-field"><label>Email</label><input id="cvr-email" value="' + cvEsc(c.email||'') + '"></div>' +
+    '<div class="cv-field"><label>Phone</label><input id="cvr-phone" value="' + cvEsc(c.phone||'') + '"></div>' +
+    '<div class="cv-field"><label>Salary ($)</label><input id="cvr-salary" value="' + cvEsc(c.salary||'') + '"></div>' +
+    '<div class="cv-field"><label>Status</label><select id="cvr-status"><option value="Active">Active</option><option value="Passive">Passive</option><option value="Placed">Placed</option></select></div>' +
+    '<div class="cv-field cv-field-full"><label>Skills</label><input id="cvr-skills" value="' + cvEsc(c.skills||'') + '"></div>' +
+    '<div class="cv-field cv-field-full"><label>Notes</label><input id="cvr-notes" value="' + cvEsc(c.notes||'') + '"></div>' +
+    '</div>' +
+    '<button class="cv-add-btn" onclick="addCandidateFromCV()">&#10003; Add to Hot Candidates</button>' +
+    '</div>';
+}
+
+function cvEsc(s) { return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function addCandidateFromCV() {
+  var name = document.getElementById('cvr-name').value.trim();
+  if (!name) { showToast('Name is required'); return; }
+  if (!state.candidates) state.candidates = [];
+  state.candidates.push({
+    id: Date.now(), name: name,
+    role: document.getElementById('cvr-role').value.trim(),
+    company: document.getElementById('cvr-company').value.trim(),
+    location: document.getElementById('cvr-location').value.trim(),
+    email: document.getElementById('cvr-email').value.trim(),
+    phone: document.getElementById('cvr-phone').value.trim(),
+    salary: document.getElementById('cvr-salary').value.trim(),
+    status: document.getElementById('cvr-status').value,
+    skills: document.getElementById('cvr-skills').value.trim(),
+    notes: document.getElementById('cvr-notes').value.trim(),
+    dateAdded: todayStr, lastContact: todayStr, deleted: false
+  });
+  save();
+  document.getElementById('cv-result-container').innerHTML =
+    '<div style="padding:12px;background:#e8f5ee;border-radius:6px;font-size:12px;color:var(--green);font-weight:600;margin-bottom:10px">&#10003; ' + name + ' added to Hot Candidates</div>';
+  var fi = document.getElementById('cv-file-input');
+  if (fi) fi.value = '';
+  renderCands();
+  showToast(name + ' added from CV');
+}
+
+
+
+// ── EXPORT / IMPORT DATA ──────────────────────────────────────
+
+function exportData() {
+  var data = {};
+  // Collect all state keys
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    try { data[key] = JSON.parse(localStorage.getItem(key)); }
+    catch(e) { data[key] = localStorage.getItem(key); }
+  }
+  var json = JSON.stringify(data, null, 2);
+  var blob = new Blob([json], {type: 'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  var d = new Date();
+  a.download = 'alex-dashboard-backup-' + d.toISOString().slice(0,10) + '.json';
+  a.click();
+  showToast('Data exported. Save this file somewhere safe.');
+}
+
+function importData(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      var count = 0;
+      Object.keys(data).forEach(function(key) {
+        var val = typeof data[key] === 'string' ? data[key] : JSON.stringify(data[key]);
+        localStorage.setItem(key, val);
+        count++;
+      });
+      showToast('Data imported. Reloading dashboard...');
+      setTimeout(function() { window.location.reload(); }, 1200);
+    } catch(err) {
+      showToast('Import failed. Make sure you selected the right file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+
+// INIT
+renderWeek();renderTasks();updateProgress();renderSugs();renderRoles();renderCands();renderMainEmails();renderSavedNotes();renderBDSnap();renderBD();renderDailyBriefing();addBriefingToTasks();setTimeout(initCVUpload,100);
+
+// ── COMPANY DATA ──────────────────────────────────────────
+var ALL_COMPANIES = [{"name": "Nunn Media", "p": "hot", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Hatched", "p": "hot", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Half Dome", "p": "hot", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "This Is Flow", "p": "hot", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Involved Media", "p": "hot", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Sparro by Brainlabs", "p": "hot", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "BCM Group", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Claxon", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Awaken", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Match and Wood", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Slingshot", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "The SPEED Agency", "p": "hot", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Bench Media", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "TFM Digital", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "PMG agency", "p": "warm", "sector": "Indie Media Agency", "sub": "Top Tier Independents"}, {"name": "Alley Group", "p": "hot", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Efficiency Leaders", "p": "hot", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Wired agency", "p": "hot", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Resolution Digital", "p": "warm", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Havas Media", "p": "warm", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Initiative Media", "p": "warm", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "UM Australia", "p": "warm", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Bohemia", "p": "warm", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Atomic 212", "p": "warm", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Crossmedia", "p": "warm", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Media Merchants", "p": "build", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Switched On Media", "p": "build", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "King Kong", "p": "build", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Digital Natives", "p": "build", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Search Republic", "p": "build", "sector": "Indie Media Agency", "sub": "Growth Agencies"}, {"name": "Impressive Digital", "p": "build", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "Megaphone Marketing", "p": "build", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "Online Marketing Gurus", "p": "build", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "First Page Digital", "p": "build", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "Web Profits", "p": "build", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "Thinkerbell", "p": "warm", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "Edge Agency", "p": "warm", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "Affinity", "p": "warm", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "Enigma", "p": "build", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "The Works", "p": "build", "sector": "Indie Media Agency", "sub": "Specialist / Boutique"}, {"name": "GroupM", "p": "warm", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "Mindshare", "p": "warm", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "Wavemaker", "p": "warm", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "EssenceMediacom", "p": "warm", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "Kinetic", "p": "build", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "Ogilvy", "p": "build", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "JWT", "p": "build", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "Grey", "p": "build", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "VML", "p": "build", "sector": "Holding Group Agencies", "sub": "WPP"}, {"name": "Starcom", "p": "warm", "sector": "Holding Group Agencies", "sub": "Publicis"}, {"name": "Zenith", "p": "warm", "sector": "Holding Group Agencies", "sub": "Publicis"}, {"name": "Spark Foundry", "p": "warm", "sector": "Holding Group Agencies", "sub": "Publicis"}, {"name": "Leo Burnett", "p": "build", "sector": "Holding Group Agencies", "sub": "Publicis"}, {"name": "Saatchi and Saatchi", "p": "build", "sector": "Holding Group Agencies", "sub": "Publicis"}, {"name": "Digitas", "p": "warm", "sector": "Holding Group Agencies", "sub": "Publicis"}, {"name": "Performics", "p": "warm", "sector": "Holding Group Agencies", "sub": "Publicis"}, {"name": "OMD Australia", "p": "warm", "sector": "Holding Group Agencies", "sub": "Omnicom"}, {"name": "PHD Media", "p": "warm", "sector": "Holding Group Agencies", "sub": "Omnicom"}, {"name": "Hearts and Science", "p": "warm", "sector": "Holding Group Agencies", "sub": "Omnicom"}, {"name": "TBWA", "p": "build", "sector": "Holding Group Agencies", "sub": "Omnicom"}, {"name": "DDB", "p": "build", "sector": "Holding Group Agencies", "sub": "Omnicom"}, {"name": "BBDO", "p": "build", "sector": "Holding Group Agencies", "sub": "Omnicom"}, {"name": "Carat Australia", "p": "warm", "sector": "Holding Group Agencies", "sub": "Dentsu"}, {"name": "iProspect", "p": "warm", "sector": "Holding Group Agencies", "sub": "Dentsu"}, {"name": "Vizeum", "p": "warm", "sector": "Holding Group Agencies", "sub": "Dentsu"}, {"name": "Dentsu Creative", "p": "build", "sector": "Holding Group Agencies", "sub": "Dentsu"}, {"name": "Merkle", "p": "warm", "sector": "Holding Group Agencies", "sub": "Dentsu"}, {"name": "Initiative", "p": "warm", "sector": "Holding Group Agencies", "sub": "IPG and Havas"}, {"name": "UM Studios", "p": "warm", "sector": "Holding Group Agencies", "sub": "IPG and Havas"}, {"name": "Havas Sydney", "p": "warm", "sector": "Holding Group Agencies", "sub": "IPG and Havas"}, {"name": "Havas Melbourne", "p": "warm", "sector": "Holding Group Agencies", "sub": "IPG and Havas"}, {"name": "McCann", "p": "build", "sector": "Holding Group Agencies", "sub": "IPG and Havas"}, {"name": "FCB", "p": "build", "sector": "Holding Group Agencies", "sub": "IPG and Havas"}, {"name": "Cartology", "p": "hot", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Coles 360", "p": "hot", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Amazon Ads AU", "p": "hot", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Bunnings Retail Media", "p": "warm", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Kmart Group Media", "p": "warm", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "David Jones Media", "p": "warm", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Myer Media", "p": "warm", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Dan Murphys Media", "p": "warm", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Chemist Warehouse Media", "p": "hot", "sector": "Retail Media", "sub": "Major Networks"}, {"name": "Zitcha", "p": "hot", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "CitrusAd", "p": "hot", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "Rokt", "p": "hot", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "Criteo", "p": "warm", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "Epsilon", "p": "warm", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "Aimia", "p": "build", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "Eagle Eye", "p": "build", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "Flybuys", "p": "warm", "sector": "Retail Media", "sub": "Technology and Platforms"}, {"name": "THE ICONIC", "p": "hot", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Showpo", "p": "hot", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Princess Polly", "p": "hot", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Culture Kings", "p": "warm", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Glue Store", "p": "warm", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Cue Clothing", "p": "build", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Country Road Group", "p": "warm", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Sussan Group", "p": "build", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Forever New", "p": "build", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Witchery", "p": "build", "sector": "Ecommerce", "sub": "Fashion and Apparel"}, {"name": "Mecca Brands", "p": "hot", "sector": "Ecommerce", "sub": "Beauty and Health"}, {"name": "Adore Beauty", "p": "hot", "sector": "Ecommerce", "sub": "Beauty and Health"}, {"name": "Priceline", "p": "warm", "sector": "Ecommerce", "sub": "Beauty and Health"}, {"name": "Sephora Australia", "p": "warm", "sector": "Ecommerce", "sub": "Beauty and Health"}, {"name": "Oz Hair and Beauty", "p": "warm", "sector": "Ecommerce", "sub": "Beauty and Health"}, {"name": "iHerb Australia", "p": "build", "sector": "Ecommerce", "sub": "Beauty and Health"}, {"name": "Nourished Life", "p": "build", "sector": "Ecommerce", "sub": "Beauty and Health"}, {"name": "Temple and Webster", "p": "hot", "sector": "Ecommerce", "sub": "Home and Living"}, {"name": "Fantastic Furniture", "p": "warm", "sector": "Ecommerce", "sub": "Home and Living"}, {"name": "Nick Scali", "p": "build", "sector": "Ecommerce", "sub": "Home and Living"}, {"name": "Freedom", "p": "build", "sector": "Ecommerce", "sub": "Home and Living"}, {"name": "Catch.com.au", "p": "warm", "sector": "Ecommerce", "sub": "Home and Living"}, {"name": "Kogan", "p": "warm", "sector": "Ecommerce", "sub": "Home and Living"}, {"name": "MyDeal", "p": "build", "sector": "Ecommerce", "sub": "Home and Living"}, {"name": "Pet Circle", "p": "hot", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "Everyday Market", "p": "warm", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "Temu AU", "p": "warm", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "Hard Yakka", "p": "build", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "Booktopia", "p": "build", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "BikeExchange", "p": "build", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "Fishpond", "p": "build", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "Canva", "p": "warm", "sector": "Ecommerce", "sub": "Food and Marketplace"}, {"name": "Nine Entertainment", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Major Publishers"}, {"name": "News Corp Australia", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Major Publishers"}, {"name": "Seven West Media", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Major Publishers"}, {"name": "Ten Network", "p": "build", "sector": "Digital Media and Publishers", "sub": "Major Publishers"}, {"name": "Foxtel Media", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Major Publishers"}, {"name": "Bauer Media", "p": "build", "sector": "Digital Media and Publishers", "sub": "Major Publishers"}, {"name": "REA Group", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "Domain", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "Seek", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "Car Sales", "p": "warm", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "Gumtree", "p": "build", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "Hipages", "p": "build", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "Redbubble", "p": "build", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "Canstar", "p": "build", "sector": "Digital Media and Publishers", "sub": "Digital First"}, {"name": "The Trade Desk Australia", "p": "hot", "sector": "Adtech and Martech", "sub": "DSPs and Trading"}, {"name": "DV360 Google", "p": "warm", "sector": "Adtech and Martech", "sub": "DSPs and Trading"}, {"name": "Xandr", "p": "warm", "sector": "Adtech and Martech", "sub": "DSPs and Trading"}, {"name": "Amazon DSP", "p": "warm", "sector": "Adtech and Martech", "sub": "DSPs and Trading"}, {"name": "Yahoo DSP", "p": "build", "sector": "Adtech and Martech", "sub": "DSPs and Trading"}, {"name": "Magnite", "p": "build", "sector": "Adtech and Martech", "sub": "DSPs and Trading"}, {"name": "PubMatic", "p": "build", "sector": "Adtech and Martech", "sub": "DSPs and Trading"}, {"name": "Nexxen Australia", "p": "hot", "sector": "Adtech and Martech", "sub": "Data and Measurement"}, {"name": "Lotame", "p": "build", "sector": "Adtech and Martech", "sub": "Data and Measurement"}, {"name": "LiveRamp", "p": "warm", "sector": "Adtech and Martech", "sub": "Data and Measurement"}, {"name": "Nielsen AU", "p": "warm", "sector": "Adtech and Martech", "sub": "Data and Measurement"}, {"name": "Kantar", "p": "build", "sector": "Adtech and Martech", "sub": "Data and Measurement"}, {"name": "IRI", "p": "build", "sector": "Adtech and Martech", "sub": "Data and Measurement"}, {"name": "Samba TV", "p": "build", "sector": "Adtech and Martech", "sub": "Data and Measurement"}, {"name": "Klaviyo AU", "p": "warm", "sector": "Adtech and Martech", "sub": "Email and CRM"}, {"name": "Salesforce Marketing Cloud", "p": "warm", "sector": "Adtech and Martech", "sub": "Email and CRM"}, {"name": "HubSpot AU", "p": "warm", "sector": "Adtech and Martech", "sub": "Email and CRM"}, {"name": "Braze", "p": "warm", "sector": "Adtech and Martech", "sub": "Email and CRM"}, {"name": "Emarsys", "p": "build", "sector": "Adtech and Martech", "sub": "Email and CRM"}, {"name": "Dotdigital", "p": "build", "sector": "Adtech and Martech", "sub": "Email and CRM"}, {"name": "Mailchimp AU", "p": "build", "sector": "Adtech and Martech", "sub": "Email and CRM"}, {"name": "DoubleVerify", "p": "warm", "sector": "Adtech and Martech", "sub": "Verification and Brand Safety"}, {"name": "Integral Ad Science", "p": "warm", "sector": "Adtech and Martech", "sub": "Verification and Brand Safety"}, {"name": "Moat Analytics", "p": "build", "sector": "Adtech and Martech", "sub": "Verification and Brand Safety"}, {"name": "CHEQ", "p": "build", "sector": "Adtech and Martech", "sub": "Verification and Brand Safety"}, {"name": "JCDecaux Australia", "p": "warm", "sector": "OOH and Audio", "sub": "Out of Home"}, {"name": "Ooh Media", "p": "warm", "sector": "OOH and Audio", "sub": "Out of Home"}, {"name": "QMS Media", "p": "warm", "sector": "OOH and Audio", "sub": "Out of Home"}, {"name": "Lumo Energy", "p": "build", "sector": "OOH and Audio", "sub": "Out of Home"}, {"name": "Bishopp Outdoor", "p": "build", "sector": "OOH and Audio", "sub": "Out of Home"}, {"name": "Spotify AU", "p": "warm", "sector": "OOH and Audio", "sub": "Audio and Streaming"}, {"name": "SCA", "p": "warm", "sector": "OOH and Audio", "sub": "Audio and Streaming"}, {"name": "ARN", "p": "warm", "sector": "OOH and Audio", "sub": "Audio and Streaming"}, {"name": "iHeartRadio", "p": "build", "sector": "OOH and Audio", "sub": "Audio and Streaming"}, {"name": "Podcasts by LISTNR", "p": "build", "sector": "OOH and Audio", "sub": "Audio and Streaming"}, {"name": "Audible AU", "p": "build", "sector": "OOH and Audio", "sub": "Audio and Streaming"}, {"name": "Catch Group", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Kogan.com", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Bonds", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "R.M.Williams", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Zimmermann", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "ASOS Australia", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Surfstitch", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "BCF", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Anaconda", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Super Cheap Auto", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Repco", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Redbubble", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Prosperity Media", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Rocket Agency", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Alpha Digital", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "We Are Social AU", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Icon Agency", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Sonder", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Teads AU", "p": "warm", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Quantcast AU", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Taboola AU", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Outbrain AU", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "TripleLift", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Seedtag", "p": "build", "sector": "Retail Tech and Sports", "sub": "Retail and Lifestyle"}, {"name": "Click Agency", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Clearwater Agency", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Holler Agency", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Supple Digital", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Digital Arts Network", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Poem Agency", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Eleven PR", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Limelight Department", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Amobee", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "GumGum AU", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Sharethrough", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Index Exchange", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "AppNexus AU", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Verizon Media AU", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Undertone", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Celtra", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Sizmek", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Adform", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Smart AdServer", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Rubicon Project", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Zanui", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Hard Yakka", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Mavi AU", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Net-a-Porter AU", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Beginning Boutique", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Autopten", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Bob Jane T-Mart", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "The Iconic Group", "p": "hot", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}, {"name": "Havas Red", "p": "build", "sector": "Performance and Growth", "sub": "Performance Marketing Agencies"}];
+
+var SECTOR_STRUCTURE = [{"sector": "Indie Media Agency", "subsectors": [{"name": "Top Tier Independents", "companies": ["Nunn Media", "Hatched", "Half Dome", "This Is Flow", "Involved Media", "Sparro by Brainlabs", "BCM Group", "Claxon", "Awaken", "Match and Wood", "Slingshot", "The SPEED Agency", "Bench Media", "TFM Digital", "PMG agency"]}, {"name": "Growth Agencies", "companies": ["Alley Group", "Efficiency Leaders", "Wired agency", "Resolution Digital", "Havas Media", "Initiative Media", "UM Australia", "Bohemia", "Atomic 212", "Crossmedia", "Media Merchants", "Switched On Media", "King Kong", "Digital Natives", "Search Republic"]}, {"name": "Specialist / Boutique", "companies": ["Impressive Digital", "Megaphone Marketing", "Online Marketing Gurus", "First Page Digital", "Web Profits", "Thinkerbell", "Edge Agency", "Affinity", "Enigma", "The Works"]}]}, {"sector": "Holding Group Agencies", "subsectors": [{"name": "WPP", "companies": ["GroupM", "Mindshare", "Wavemaker", "EssenceMediacom", "Kinetic", "Ogilvy", "JWT", "Grey", "VML"]}, {"name": "Publicis", "companies": ["Starcom", "Zenith", "Spark Foundry", "Leo Burnett", "Saatchi and Saatchi", "Digitas", "Performics"]}, {"name": "Omnicom", "companies": ["OMD Australia", "PHD Media", "Hearts and Science", "TBWA", "DDB", "BBDO"]}, {"name": "Dentsu", "companies": ["Carat Australia", "iProspect", "Vizeum", "Dentsu Creative", "Merkle"]}, {"name": "IPG and Havas", "companies": ["Initiative", "UM Studios", "Havas Sydney", "Havas Melbourne", "McCann", "FCB"]}]}, {"sector": "Retail Media", "subsectors": [{"name": "Major Networks", "companies": ["Cartology", "Coles 360", "Amazon Ads AU", "Bunnings Retail Media", "Kmart Group Media", "David Jones Media", "Myer Media", "Dan Murphys Media", "Chemist Warehouse Media"]}, {"name": "Technology and Platforms", "companies": ["Zitcha", "CitrusAd", "Rokt", "Criteo", "Epsilon", "Aimia", "Eagle Eye", "Flybuys"]}]}, {"sector": "Ecommerce", "subsectors": [{"name": "Fashion and Apparel", "companies": ["THE ICONIC", "Showpo", "Princess Polly", "Culture Kings", "Glue Store", "Cue Clothing", "Country Road Group", "Sussan Group", "Forever New", "Witchery"]}, {"name": "Beauty and Health", "companies": ["Mecca Brands", "Adore Beauty", "Priceline", "Sephora Australia", "Oz Hair and Beauty", "iHerb Australia", "Nourished Life"]}, {"name": "Home and Living", "companies": ["Temple and Webster", "Fantastic Furniture", "Nick Scali", "Freedom", "Catch.com.au", "Kogan", "MyDeal"]}, {"name": "Food and Marketplace", "companies": ["Pet Circle", "Everyday Market", "Temu AU", "Hard Yakka", "Booktopia", "BikeExchange", "Fishpond", "Canva"]}]}, {"sector": "Digital Media and Publishers", "subsectors": [{"name": "Major Publishers", "companies": ["Nine Entertainment", "News Corp Australia", "Seven West Media", "Ten Network", "Foxtel Media", "Bauer Media"]}, {"name": "Digital First", "companies": ["REA Group", "Domain", "Seek", "Car Sales", "Gumtree", "Hipages", "Redbubble", "Canstar"]}]}, {"sector": "Adtech and Martech", "subsectors": [{"name": "DSPs and Trading", "companies": ["The Trade Desk Australia", "DV360 Google", "Xandr", "Amazon DSP", "Yahoo DSP", "Magnite", "PubMatic"]}, {"name": "Data and Measurement", "companies": ["Nexxen Australia", "Lotame", "LiveRamp", "Nielsen AU", "Kantar", "IRI", "Samba TV"]}, {"name": "Email and CRM", "companies": ["Klaviyo AU", "Salesforce Marketing Cloud", "HubSpot AU", "Braze", "Emarsys", "Dotdigital", "Mailchimp AU"]}, {"name": "Verification and Brand Safety", "companies": ["DoubleVerify", "Integral Ad Science", "Moat Analytics", "CHEQ"]}]}, {"sector": "OOH and Audio", "subsectors": [{"name": "Out of Home", "companies": ["JCDecaux Australia", "Ooh Media", "QMS Media", "Lumo Energy", "Bishopp Outdoor"]}, {"name": "Audio and Streaming", "companies": ["Spotify AU", "SCA", "ARN", "iHeartRadio", "Podcasts by LISTNR", "Audible AU"]}]}, {"sector": "Retail Tech and Sports", "subsectors": [{"name": "Retail and Lifestyle", "companies": ["Catch Group", "Kogan.com", "Bonds", "R.M.Williams", "Zimmermann", "ASOS Australia", "Surfstitch", "BCF", "Anaconda", "Super Cheap Auto", "Repco", "Redbubble", "Prosperity Media", "Rocket Agency", "Alpha Digital", "We Are Social AU", "Icon Agency", "Sonder", "Teads AU", "Quantcast AU", "Taboola AU", "Outbrain AU", "TripleLift", "Seedtag"]}]}, {"sector": "Performance and Growth", "subsectors": [{"name": "Performance Marketing Agencies", "companies": ["Click Agency", "Clearwater Agency", "Holler Agency", "Supple Digital", "Digital Arts Network", "Poem Agency", "Eleven PR", "Limelight Department", "Amobee", "GumGum AU", "Sharethrough", "Index Exchange", "AppNexus AU", "Verizon Media AU", "Undertone", "Celtra", "Sizmek", "Adform", "Smart AdServer", "Rubicon Project", "Zanui", "Hard Yakka", "Mavi AU", "Net-a-Porter AU", "Beginning Boutique", "Autopten", "Bob Jane T-Mart", "The Iconic Group", "Havas Red"]}]}];
+
+
+// ── MAP STATE ─────────────────────────────────────────────────
+
+
+
+function setMapFilter(f, btn) {
+  mapFilter = f;
+  document.querySelectorAll('.map-controls .cf').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderMap();
+}
+
+function filterMap() {
+  mapSearchQ = (document.getElementById('map-search').value || '').toLowerCase().trim();
+  renderMap();
+}
+
+function isInTracker(name) {
+  return (state.bdCompanies || []).some(c => c.name.toLowerCase() === name.toLowerCase() && !c.deleted);
+}
+
+function isDeletedFromMap(name) {
+  return (state.mapDeleted || []).includes(name);
+}
+
+function renderMap() {
+  console.log('[renderMap] called, mapFilter=' + mapFilter + ' mapSearchQ=' + JSON.stringify(mapSearchQ));
+  var grid = document.getElementById('map-grid');
+  console.log('[renderMap] grid element:', grid ? 'found' : 'NOT FOUND');
+  if (!grid) return;
+  var q = mapSearchQ ? mapSearchQ.toLowerCase() : '';
+  var tracked = {};
+  (state.bdCompanies || []).forEach(function(c) { if (!c.deleted) tracked[c.name.toLowerCase()] = true; });
+  var deleted = {};
+  (state.mapDeleted || []).forEach(function(n) { deleted[n] = true; });
+  var prio = {};
+  ALL_COMPANIES.forEach(function(c) { prio[c.name] = c.p; });
+  (state.customMapCompanies || []).forEach(function(c) { prio[c.name] = c.priority || 'warm'; });
+
+  var secs = JSON.parse(JSON.stringify(SECTOR_STRUCTURE));
+  (state.customMapCompanies || []).forEach(function(co) {
+    var found = false;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i].sector === co.sector) { secs[i].subsectors[0].companies.push(co.name); found = true; break; }
+    }
+    if (!found) secs.push({sector: co.sector, subsectors: [{name: 'Custom', companies: [co.name]}]});
+  });
+
+  var html = '';
+  var totalAdded = 0;
+  for (var si = 0; si < secs.length; si++) {
+    var sec = secs[si];
+    var secHtml = '';
+    var secCount = 0;
+    for (var ui = 0; ui < sec.subsectors.length; ui++) {
+      var sub = sec.subsectors[ui];
+      var pHtml = '';
+      for (var ci = 0; ci < sub.companies.length; ci++) {
+        var nm = sub.companies[ci];
+        if (deleted[nm]) continue;
+        var inT = !!tracked[nm.toLowerCase()];
+        if (inT) totalAdded++;
+        if (mapFilter === 'hot' && prio[nm] !== 'hot') continue;
+        if (mapFilter === 'not-added' && inT) continue;
+        if (mapFilter === 'added' && !inT) continue;
+        if (q && nm.toLowerCase().indexOf(q) === -1) continue;
+        secCount++;
+        var cls = inT ? 'in-tracker' : (prio[nm] || 'build');
+        var sn = nm.replace(/'/g, "\'");
+        var ss = sec.sector.replace(/'/g, "\'");
+        var al = inT ? '&#10003; Added' : '+ Tracker';
+        pHtml += '<span class="co-pill ' + cls + '">' + nm + '<span class="pill-actions"><button class="pill-add" onclick="addToTrackerFromMap(\'' + sn + '\',\'' + ss + '\')">' + al + '</button><button class="pill-del" onclick="deleteFromMap(\'' + sn + '\')">&#215;</button></span></span> ';
+      }
+      if (pHtml) secHtml += '<div class="sub-group"><div class="sub-lbl">' + sub.name + '</div><div class="co-pills">' + pHtml + '</div></div>';
+    }
+    if (secHtml) html += '<div class="sector-card"><div class="sector-hdr"><span class="sector-name">' + sec.sector + '</span><span class="sector-count">' + secCount + '</span></div>' + secHtml + '</div>';
+  }
+  console.log('[renderMap] html length:', html.length, 'pills:', (html.match(/co-pill/g)||[]).length);
+  grid.innerHTML = html || '<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No companies match.</div>';
+  var el = document.getElementById('map-added-count');
+  if (el) el.textContent = totalAdded > 0 ? totalAdded + ' added to tracker' : '';
+}
+
+function addToTrackerFromMap(name, sector) {
+  if (!state.bdCompanies) state.bdCompanies = [];
+  const exists = state.bdCompanies.find(c => c.name.toLowerCase() === name.toLowerCase());
+  if (exists && !exists.deleted) {
+    showToast(name + ' is already in your BD Tracker');
+    return;
+  }
+  if (exists) {
+    exists.deleted = false;
+  } else {
+    state.bdCompanies.push({
+      id: Date.now(), name, sector,
+      status: 'Not contacted', priority: 'warm',
+      notes: '', contact: '', followup: '',
+      dateAdded: todayStr, deleted: false
+    });
+  }
+  save();
+  renderMap();
+  renderBD();
+  renderBDSnap();
+  showToast(name + ' added to BD Tracker');
+}
+
+function deleteFromMap(name) {
+  if (!confirm('Remove ' + name + ' from the market map? You can add it back with the + Add company button.')) return;
+  if (!state.mapDeleted) state.mapDeleted = [];
+  if (!state.mapDeleted.includes(name)) state.mapDeleted.push(name);
+  // Also remove from BD tracker if present
+  if (state.bdCompanies) {
+    const bd = state.bdCompanies.find(c => c.name.toLowerCase() === name.toLowerCase());
+    if (bd) bd.deleted = true;
+  }
+  save();
+  renderMap();
+  renderBD();
+  renderBDSnap();
+  showToast(name + ' removed');
+}
+
+// ── BD TRACKER ─────────────────────────────────────────────────
+
+
+
+function daysSince(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const diff = Math.floor((new Date() - d) / (1000 * 60 * 60 * 24));
+  return diff;
+}
+
+function getLastContactDate(c) {
+  const log = c.activityLog || [];
+  if (!log.length) return null;
+  const sorted = [...log].sort((a, b) => b.date.localeCompare(a.date));
+  return sorted[0].date;
+}
+
+function getStaleness(c) {
+  const last = getLastContactDate(c);
+  if (!last) return {days: null, label: 'Never contacted', cls: 'stale-14'};
+  const days = daysSince(last);
+  if (days === 0) return {days: 0, label: 'Today', cls: 'stale-ok'};
+  if (days <= 7) return {days, label: days + 'd ago', cls: 'stale-ok'};
+  if (days <= 14) return {days, label: days + 'd ago', cls: 'stale-7'};
+  return {days, label: days + 'd ago', cls: 'stale-14'};
+}
+
+function renderBDStats() {
+  const companies = (state.bdCompanies || []).filter(c => !c.deleted);
+  const counts = {total: companies.length, contacted: 0, meeting: 0, brief: 0, placed: 0, overdue: 0};
+  companies.forEach(c => {
+    if ((c.activityLog||[]).length > 0) counts.contacted++;
+    if (c.status === 'Meeting held') counts.meeting++;
+    if (c.status === 'Brief received') counts.brief++;
+    if (c.status === 'Placed') counts.placed++;
+    if (c.followup && c.followup < todayStr) counts.overdue++;
+  });
+  const el = document.getElementById('bd-stats-row');
+  if (!el) return;
+  el.innerHTML = [
+    {n: counts.total, l: 'Total tracked', c: 'var(--ink)'},
+    {n: counts.contacted, l: 'Contacted', c: 'var(--blue)'},
+    {n: counts.meeting, l: 'Meetings', c: 'var(--green)'},
+    {n: counts.brief, l: 'Briefs received', c: 'var(--accent)'},
+    {n: counts.overdue, l: 'Follow-ups due', c: counts.overdue > 0 ? 'var(--accent)' : 'var(--gold)'},
+    {n: counts.placed, l: 'Placements', c: 'var(--gold)'},
+  ].map(s => `<div class="bd-stat"><div class="bd-stat-n" style="color:${s.c}">${s.n}</div><div class="bd-stat-l">${s.l}</div></div>`).join('');
+}
+
+function renderBD() {
+  renderBDStats();
+  const q = (document.getElementById('bd-search') ? document.getElementById('bd-search').value : '').toLowerCase().trim();
+  const statusF = document.getElementById('bd-filter-status') ? document.getElementById('bd-filter-status').value : 'all';
+  const sectorF = document.getElementById('bd-filter-sector') ? document.getElementById('bd-filter-sector').value : 'all';
+  const companies = (state.bdCompanies || []).filter(c => {
+    if (c.deleted) return false;
+    if (statusF !== 'all' && c.status !== statusF) return false;
+    if (sectorF !== 'all' && c.sector !== sectorF) return false;
+    if (q) {
+      const contacts = (c.contacts||[]).map(ct => ct.name + ' ' + ct.title + ' ' + ct.email).join(' ');
+      const log = (c.activityLog||[]).map(a => a.note).join(' ');
+      if (![c.name, c.sector, c.notes, contacts, log].join(' ').toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  const el = document.getElementById('bd-rows');
+  if (!el) return;
+
+  if (!companies.length) {
+    el.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">' + (state.bdCompanies && state.bdCompanies.filter(c=>!c.deleted).length ? 'No results for this filter.' : 'No companies yet. Add from the Market Map tab or click + Add manually.') + '</div>';
+    return;
+  }
+
+  const STATUSES = ['Not contacted','Connected','Email sent','Call booked','Meeting held','Brief received','Placed'];
+  const PRIORITIES = ['hot','warm','build'];
+
+  el.innerHTML = companies.map(c => {
+    const statusOpts = STATUSES.map(s => `<option${c.status===s?' selected':''}>${s}</option>`).join('');
+    const prioOpts = PRIORITIES.map(p => `<option value="${p}"${c.priority===p?' selected':''}>${p.charAt(0).toUpperCase()+p.slice(1)}</option>`).join('');
+    const stale = getStaleness(c);
+    const overdue = c.followup && c.followup < todayStr;
+    const isExpanded = expandedRows[c.id];
+    const rowCls = stale.cls === 'stale-14' ? 'stale-red' : stale.cls === 'stale-7' ? 'stale-warn' : '';
+    const lastLog = (c.activityLog||[]).sort((a,b)=>b.date.localeCompare(a.date))[0];
+    const lastAction = lastLog ? `<span class="activity-type at-${lastLog.type}">${lastLog.type}</span>${lastLog.note||''}` : '<span style="opacity:.4;font-size:11px">No activity logged</span>';
+    const contactCount = (c.contacts||[]).length;
+    const followupDisplay = c.followup ? `<span style="${overdue?'color:var(--accent);font-weight:600':''}">${c.followup}${overdue?' &#9888;':''}</span>` : '—';
+
+    const rowHTML = `<div class="bd-row ${rowCls}" id="bdr-${c.id}" style="grid-template-columns:40px 180px 1fr 130px 80px 110px 80px">
+      <div class="bd-cell" style="padding:4px 8px"><button class="expand-btn${isExpanded?' open':''}" onclick="toggleBDRow(${c.id})" title="Expand">&#9654;</button></div>
+      <div class="bd-cell"><div class="bd-co-name">${c.name}</div><div class="bd-co-sector">${c.sector||''}</div>${contactCount ? `<div style="font-size:9px;color:var(--green);margin-top:2px">&#128100; ${contactCount} contact${contactCount>1?'s':''}</div>` : ''}</div>
+      <div class="bd-cell" style="white-space:normal;font-size:11px;line-height:1.4">${lastAction}</div>
+      <div class="bd-cell"><select onchange="updateBDField(${c.id},'status',this.value)">${statusOpts}</select></div>
+      <div class="bd-cell"><select onchange="updateBDField(${c.id},'priority',this.value)">${prioOpts}</select></div>
+      <div class="bd-cell"><span class="stale-badge ${stale.cls}">${stale.label}</span>${c.followup ? `<div style="font-size:10px;margin-top:3px;${overdue?'color:var(--accent);font-weight:600':''}">${overdue?'&#9888; ':''} FU: ${c.followup}</div>` : ''}</div>
+      <div class="bd-cell bd-act-btns">
+        <button class="tact em" style="font-size:10px;padding:2px 7px" onclick="toggleBDRow(${c.id})">Open</button>
+        <button class="tact del" style="font-size:10px;padding:2px 7px" onclick="deleteBDCompany(${c.id})">Del</button>
+      </div>
+    </div>`;
+
+    const detailHTML = isExpanded ? `<div class="bd-row-expanded" id="bdx-${c.id}">
+      <div class="bd-detail">
+        <div class="bd-detail-section">
+          <div class="bd-detail-title">
+            <span>&#128100; Hiring Managers</span>
+            <button onclick="toggleAddContact(${c.id})" class="tact em" style="font-size:9px;padding:2px 7px">+ Add</button>
+          </div>
+          ${(c.contacts||[]).map((ct,ci) => `<div class="contact-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div><div class="contact-name">${ct.name}</div><div class="contact-title">${ct.title||''}</div></div>
+              <button class="contact-del" onclick="deleteContact(${c.id},${ci})" title="Remove">&#215;</button>
+            </div>
+            <div class="contact-links">
+              ${ct.email ? `<a class="contact-link" href="mailto:${ct.email}">${ct.email}</a>` : ''}
+              ${ct.phone ? `<a class="contact-link" href="tel:${ct.phone}">${ct.phone}</a>` : ''}
+              ${ct.linkedin ? `<a class="contact-link" href="https://${ct.linkedin.replace('https://','')}" target="_blank">LinkedIn</a>` : ''}
+            </div>
+          </div>`).join('') || '<div style="font-size:11px;color:var(--muted);padding:4px 0">No contacts added yet.</div>'}
+          <div id="add-contact-form-${c.id}" style="display:none" class="add-contact-form">
+            <input class="mini-inp" id="ct-name-${c.id}" placeholder="Full name *">
+            <input class="mini-inp" id="ct-title-${c.id}" placeholder="Title / role">
+            <input class="mini-inp" id="ct-email-${c.id}" placeholder="Email address">
+            <input class="mini-inp" id="ct-phone-${c.id}" placeholder="Phone">
+            <input class="mini-inp" id="ct-li-${c.id}" placeholder="LinkedIn URL">
+            <button class="mini-btn" onclick="saveContact(${c.id})">Save contact</button>
+          </div>
+        </div>
+        <div class="bd-detail-section">
+          <div class="bd-detail-title">
+            <span>&#128203; Activity Log</span>
+            <button onclick="toggleAddActivity(${c.id})" class="tact em" style="font-size:9px;padding:2px 7px">+ Log</button>
+          </div>
+          <div id="add-activity-form-${c.id}" style="display:none" class="add-activity-form">
+            <select class="mini-sel" id="act-type-${c.id}">
+              <option value="email">Email sent</option>
+              <option value="call">Call made</option>
+              <option value="linkedin">LinkedIn message</option>
+              <option value="meeting">Meeting held</option>
+              <option value="note">Note</option>
+            </select>
+            <input class="mini-inp" id="act-note-${c.id}" placeholder="What happened? e.g. Left voicemail, sent intro email">
+            <input class="mini-inp" id="act-date-${c.id}" type="date" value="${todayStr}">
+            <button class="mini-btn" onclick="saveActivity(${c.id})">Save activity</button>
+          </div>
+          <div style="max-height:220px;overflow-y:auto">
+            ${(c.activityLog||[]).sort((a,b)=>b.date.localeCompare(a.date)).map((a,ai) => `<div class="activity-item">
+              <span class="activity-date">${a.date}</span>
+              <span class="activity-type at-${a.type}">${a.type}</span>
+              <div class="activity-note">${a.note||'No details'}</div>
+            </div>`).join('') || '<div style="font-size:11px;color:var(--muted);padding:4px 0">No activity logged yet.</div>'}
+          </div>
+        </div>
+        <div class="bd-detail-section">
+          <div class="bd-detail-title"><span>&#128197; Follow-up and Notes</span></div>
+          <div style="margin-bottom:10px">
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px">Next follow-up date</div>
+            <input class="mini-inp" type="date" id="fu-date-${c.id}" value="${c.followup||''}" onchange="updateBDField(${c.id},'followup',this.value)">
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px">Notes</div>
+            <textarea class="mini-inp" id="co-notes-${c.id}" style="min-height:80px;resize:vertical" onblur="updateBDField(${c.id},'notes',this.value)">${c.notes||''}</textarea>
+          </div>
+          <div style="margin-top:8px">
+            <button class="tact em" style="width:100%;font-size:11px;padding:6px" onclick="logQuickContact(${c.id})">&#9889; Log quick contact today</button>
+          </div>
+        </div>
+      </div>
+    </div>` : '';
+
+    return rowHTML + detailHTML;
+  }).join('');
+}
+
+function toggleBDRow(id) {
+  expandedRows[id] = !expandedRows[id];
+  renderBD();
+  if (expandedRows[id]) {
+    setTimeout(() => {
+      const el = document.getElementById('bdx-' + id);
+      if (el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 50);
+  }
+}
+
+function toggleAddContact(id) {
+  const f = document.getElementById('add-contact-form-' + id);
+  if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleAddActivity(id) {
+  const f = document.getElementById('add-activity-form-' + id);
+  if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function saveContact(id) {
+  const name = document.getElementById('ct-name-' + id).value.trim();
+  if (!name) { alert('Name is required.'); return; }
+  const c = (state.bdCompanies || []).find(c => c.id === id);
+  if (!c) return;
+  if (!c.contacts) c.contacts = [];
+  c.contacts.push({
+    name,
+    title: document.getElementById('ct-title-' + id).value.trim(),
+    email: document.getElementById('ct-email-' + id).value.trim(),
+    phone: document.getElementById('ct-phone-' + id).value.trim(),
+    linkedin: document.getElementById('ct-li-' + id).value.trim(),
+  });
+  save(); renderBD(); showToast('Contact saved');
+}
+
+function deleteContact(companyId, contactIdx) {
+  const c = (state.bdCompanies || []).find(c => c.id === companyId);
+  if (c && c.contacts) {
+    c.contacts.splice(contactIdx, 1);
+    save(); renderBD();
+  }
+}
+
+function saveActivity(id) {
+  const note = document.getElementById('act-note-' + id).value.trim();
+  const type = document.getElementById('act-type-' + id).value;
+  const date = document.getElementById('act-date-' + id).value || todayStr;
+  const c = (state.bdCompanies || []).find(c => c.id === id);
+  if (!c) return;
+  if (!c.activityLog) c.activityLog = [];
+  c.activityLog.push({type, note, date, id: Date.now()});
+  // Update status based on activity type
+  const statusMap = {email:'Email sent', call:'Call booked', meeting:'Meeting held', linkedin:'Connected'};
+  if (statusMap[type]) c.status = statusMap[type];
+  save(); renderBD(); renderBDSnap(); showToast('Activity logged');
+}
+
+function logQuickContact(id) {
+  const c = (state.bdCompanies || []).find(c => c.id === id);
+  if (!c) return;
+  if (!c.activityLog) c.activityLog = [];
+  c.activityLog.push({type:'note', note:'Quick contact logged', date: todayStr, id: Date.now()});
+  save(); renderBD(); renderBDSnap(); showToast('Contact logged for today');
+}
+
+function updateBDField(id, field, value) {
+  const c = (state.bdCompanies || []).find(c => c.id === id);
+  if (c) { c[field] = value; save(); renderBDSnap(); renderBDStats(); }
+}
+
+function deleteBDCompany(id) {
+  const c = (state.bdCompanies || []).find(c => c.id === id);
+  if (!c) return;
+  if (!confirm('Remove ' + c.name + ' from BD Tracker?')) return;
+  c.deleted = true;
+  delete expandedRows[id];
+  save(); renderBD(); renderBDSnap(); renderMap();
+  showToast(c.name + ' removed from BD Tracker');
+}
+
+function renderBDSnap() {
+  const el = document.getElementById('bd-snap');
+  const countEl = document.getElementById('bd-snap-count');
+  const companies = (state.bdCompanies || []).filter(c => !c.deleted);
+  if (countEl) countEl.textContent = companies.length + ' tracked';
+  if (!el) return;
+  const hot = companies.filter(c => c.priority === 'hot').slice(0, 5);
+  if (!hot.length) {
+    el.innerHTML = '<p style="font-size:11px;color:var(--muted)">No hot targets yet. Add companies from the Market Map.</p>';
+    return;
+  }
+  const STAT_COLORS = {'Not contacted':'var(--muted)','Connected':'var(--blue)','Email sent':'var(--blue)','Call booked':'var(--gold)','Meeting held':'var(--green)','Brief received':'var(--accent)','Placed':'var(--green)'};
+  el.innerHTML = hot.map(c => `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">
+    <span style="font-weight:500">${c.name}</span>
+    <span style="font-size:10px;color:${STAT_COLORS[c.status]||'var(--muted)'};font-weight:600">${c.status}</span>
+  </div>`).join('');
+}
+
+// ── ADD COMPANY MODAL ─────────────────────────────────────────
+let addCompanyDest = 'both';
+
+function openAddCompanyModal(dest) {
+  addCompanyDest = dest || 'both';
+  document.getElementById('add-co-title').textContent = dest === 'bd' ? 'Add to BD Tracker' : dest === 'map' ? 'Add to Market Map' : 'Add Company';
+  document.getElementById('add-co-name').value = '';
+  document.getElementById('add-co-notes').value = '';
+  document.getElementById('add-co-dest').value = addCompanyDest === 'bd' ? 'bd' : addCompanyDest === 'map' ? 'map' : 'both';
+  openModal('add-co-ov');
+}
+
+function saveAddCompany() {
+  const name = document.getElementById('add-co-name').value.trim();
+  if (!name) { alert('Please enter a company name.'); return; }
+  const sector = document.getElementById('add-co-sector').value;
+  const priority = document.getElementById('add-co-priority').value;
+  const notes = document.getElementById('add-co-notes').value.trim();
+  const dest = document.getElementById('add-co-dest').value;
+
+  if (dest === 'map' || dest === 'both') {
+    if (!state.customMapCompanies) state.customMapCompanies = [];
+    if (!state.customMapCompanies.find(c => c.name.toLowerCase() === name.toLowerCase())) {
+      state.customMapCompanies.push({name, sector, priority, notes});
+    }
+    // Remove from deleted list if it was there
+    if (state.mapDeleted) state.mapDeleted = state.mapDeleted.filter(n => n.toLowerCase() !== name.toLowerCase());
+  }
+
+  if (dest === 'bd' || dest === 'both') {
+    if (!state.bdCompanies) state.bdCompanies = [];
+    const exists = state.bdCompanies.find(c => c.name.toLowerCase() === name.toLowerCase());
+    if (exists) {
+      exists.deleted = false;
+      exists.notes = notes || exists.notes;
+    } else {
+      state.bdCompanies.push({
+        id: Date.now(), name, sector, priority,
+        status: 'Not contacted', notes, contact: '',
+        followup: '', dateAdded: todayStr, deleted: false
+      });
+    }
+  }
+
+  save();
+  closeModal('add-co-ov');
+  renderMap();
+  renderBD();
+  renderBDSnap();
+  showToast(name + ' added successfully');
+}
+
+// ── TOAST NOTIFICATION ────────────────────────────────────────
+function showToast(msg) {
+  let toast = document.getElementById('toast-el');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast-el';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;padding:8px 18px;border-radius:20px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 2200);
+}
+
+</script>
+
+<!-- JOB SIGNALS PAGE -->
+<div class="page" id="page-signals">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h2 style="font-family:Syne,sans-serif;font-size:20px;font-weight:800">&#128268; Job Signals</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:3px">Live Seek feed + LinkedIn one-click searches. Zero API cost.</p>
+    </div>
+    <button class="add-btn" onclick="refreshAllFeeds()">&#8635; Refresh all feeds</button>
+  </div>
+
+  <div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;font-size:11px;align-items:center">
+    <span style="color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:10px">How it works:</span>
+    <span style="background:#fdecea;color:var(--accent);padding:2px 8px;border-radius:3px;font-weight:600;font-size:10px">&#127758; On map</span> <span style="color:var(--muted)">= already in your Market Map</span>
+    <span style="background:#e8f5ee;color:var(--green);padding:2px 8px;border-radius:3px;font-weight:600;font-size:10px">&#10003; In BD</span> <span style="color:var(--muted)">= already in your BD Tracker</span>
+    <span style="background:#e8f5ee;color:var(--green);padding:2px 8px;border-radius:3px;font-size:10px">Recruitment agencies automatically filtered out</span>
+  </div>
+  <div class="signals-summary" id="signals-summary">
+    <div class="sig-stat"><div class="sig-stat-n" id="sig-total">0</div><div class="sig-stat-l">Jobs found</div></div>
+    <div class="sig-stat"><div class="sig-stat-n" id="sig-new" style="color:var(--green)">0</div><div class="sig-stat-l">New today</div></div>
+    <div class="sig-stat"><div class="sig-stat-n">10</div><div class="sig-stat-l">Seek searches</div></div>
+    <div class="last-checked" id="sig-last-checked">Not yet checked</div>
+  </div>
+  </div>
+
+  <div class="signals-grid">
+    <!-- SEEK FEEDS -->
+    <div>
+      <div class="slbl" style="margin-bottom:8px">&#128269; Seek — One-Click Searches</div><p style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">Each button opens Seek with the search already applied, sorted newest first, all Australia. No login needed.</p>
+      <div id="seek-feeds-container">
+        <!-- Feeds rendered by JS -->
+      </div>
+    </div>
+
+    <!-- LINKEDIN QUICK SEARCHES -->
+    <div>
+      <div class="slbl" style="margin-bottom:12px">&#128101; LinkedIn One-Click Searches</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Click any button to open a pre-built LinkedIn Jobs search in a new tab. Results are live and current.</p>
+      <div id="li-searches-container">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="margin-top:20px">
+        <div class="slbl" style="margin-bottom:10px">&#128640; Quick Actions</div>
+        <div style="display:flex;flex-direction:column;gap:8px" id="quick-actions">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>
